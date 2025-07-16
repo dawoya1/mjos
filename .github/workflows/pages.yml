@@ -35,31 +35,47 @@ jobs:
       
       - name: Build documentation
         run: |
-          # Convert markdown files to HTML
+          # Create a simple index.html for GitHub Pages
           mkdir -p docs/generated
-          
-          # Copy existing HTML files
-          cp docs/*.html docs/generated/ 2>/dev/null || true
-          cp docs/*.css docs/generated/ 2>/dev/null || true
-          
-          # Convert markdown to HTML (simple conversion)
-          if [ -f "docs/API.md" ]; then
-            echo '<!DOCTYPE html><html><head><title>API Documentation</title><link rel="stylesheet" href="styles.css"></head><body><div class="container">' > docs/generated/API.html
-            npx marked docs/API.md >> docs/generated/API.html
-            echo '</div></body></html>' >> docs/generated/API.html
-          fi
-          
-          if [ -f "docs/EXAMPLES.md" ]; then
-            echo '<!DOCTYPE html><html><head><title>Examples</title><link rel="stylesheet" href="styles.css"></head><body><div class="container">' > docs/generated/EXAMPLES.html
-            npx marked docs/EXAMPLES.md >> docs/generated/EXAMPLES.html
-            echo '</div></body></html>' >> docs/generated/EXAMPLES.html
-          fi
-          
-          if [ -f "docs/QUICKSTART.md" ]; then
-            echo '<!DOCTYPE html><html><head><title>Quick Start</title><link rel="stylesheet" href="styles.css"></head><body><div class="container">' > docs/generated/QUICKSTART.html
-            npx marked docs/QUICKSTART.md >> docs/generated/QUICKSTART.html
-            echo '</div></body></html>' >> docs/generated/QUICKSTART.html
-          fi
+
+          # Create index.html
+          cat > docs/generated/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>MJOS Documentation</title>
+              <style>
+                  body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                  h1 { color: #333; }
+                  .link-list { list-style: none; padding: 0; }
+                  .link-list li { margin: 10px 0; }
+                  .link-list a { text-decoration: none; color: #0066cc; }
+                  .link-list a:hover { text-decoration: underline; }
+              </style>
+          </head>
+          <body>
+              <h1>MJOS Documentation</h1>
+              <p>Welcome to MJOS (Magic Sword Studio Operating System) documentation.</p>
+
+              <h2>Documentation Links</h2>
+              <ul class="link-list">
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/README.md">📖 README</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/QUICKSTART.md">🚀 Quick Start Guide</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/USER_GUIDE.md">📚 User Guide</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/API.md">🔧 API Documentation</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/EXAMPLES.md">💡 Examples</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/MCP_DEPLOYMENT.md">🌐 MCP Deployment</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/FAQ.md">❓ FAQ</a></li>
+                  <li><a href="https://github.com/dawoya1/mjos/blob/main/docs/TROUBLESHOOTING.md">🔍 Troubleshooting</a></li>
+              </ul>
+
+              <h2>Repository</h2>
+              <p><a href="https://github.com/dawoya1/mjos">🔗 View on GitHub</a></p>
+          </body>
+          </html>
+          EOF
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -67,7 +83,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs'
+          path: './docs/generated'
       
       - name: Deploy to GitHub Pages
         id: deployment

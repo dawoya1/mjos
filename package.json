@@ -20,11 +20,7 @@
     "memory-system",
     "task-management",
     "performance-monitoring",
-    "enterprise",
-    "mcp",
-    "model-context-protocol",
-    "claude-desktop",
-    "cursor"
+    "enterprise"
   ],
   "author": "Magic Sword Studio",
   "license": "MIT",
@@ -58,8 +54,6 @@
     "demo:context": "ts-node examples/context-management-demo.ts",
     "demo:collaboration": "ts-node examples/real-collaboration-demo.ts",
     "demo:mcp": "ts-node examples/mcp-server-demo.ts",
-    "mcp:start": "node examples/mcp-server-demo.js",
-    "mcp:demo": "ts-node examples/mcp-server-demo.ts",
     "demo:monitoring": "ts-node examples/system-monitoring-demo.ts",
     "demo:phase1": "node examples/phase1-demo.js",
     "demo:phase2": "node examples/phase2-demo.js",
@@ -85,12 +79,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MagicSwordStudio/MJOS.git"
+    "url": "git+https://github.com/dawoya1/mjos.git"
   },
   "bugs": {
-    "url": "https://github.com/MagicSwordStudio/MJOS/issues"
+    "url": "https://github.com/dawoya1/mjos/issues"
   },
-  "homepage": "https://github.com/MagicSwordStudio/MJOS#readme",
+  "homepage": "https://github.com/dawoya1/mjos#readme",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -122,18 +116,5 @@
     "@typescript-eslint/parser": "^6.13.1",
     "eslint": "^8.54.0",
     "rimraf": "^5.0.5"
-  },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
-    "extends": [
-      "eslint:recommended",
-      "@typescript-eslint/recommended"
-    ],
-    "rules": {
-      "@typescript-eslint/no-unused-vars": "error",
-      "@typescript-eslint/no-explicit-any": "warn",
-      "prefer-const": "error"
-    }
   }
 }

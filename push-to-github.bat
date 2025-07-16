@@ -1,18 +1,24 @@
 @echo off
 echo ========================================
-echo MJOS GitHub Push Script
+echo MJOS GitHub Structure Fix Push Script
 echo ========================================
+echo.
+echo This script will fix the repository structure by:
+echo 1. Force pushing the correct file structure
+echo 2. README.md will be in root directory
+echo 3. All project files properly organized
 echo.
 
 echo Checking Git status...
 git status
 
 echo.
-echo Pushing to GitHub repository...
+echo Force pushing corrected structure to GitHub...
 echo Repository: https://github.com/dawoya1/mjos
+echo WARNING: This will overwrite the previous incorrect structure
 echo.
 
-git push -u origin main
+git push -f origin main
 
 if %ERRORLEVEL% EQU 0 (
     echo.
