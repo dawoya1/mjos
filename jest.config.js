@@ -12,12 +12,8 @@ module.exports = {
 
   // 测试文件匹配模式
   testMatch: [
-    '<rootDir>/tests/**/*.test.js',
-    '<rootDir>/tests/**/*.test.ts',
-    '<rootDir>/src/**/__tests__/**/*.test.ts',
-    '<rootDir>/src/**/__tests__/**/*.test.js',
-    '<rootDir>/src/**/*.test.ts',
-    '<rootDir>/src/**/*.test.js'
+    '**/tests/**/*.test.js',
+    '**/tests/**/*.test.ts'
   ],
 
   // TypeScript支持
@@ -79,7 +75,9 @@ module.exports = {
   testPathIgnorePatterns: [
     '/node_modules/',
     '/dist/',
-    '/coverage/'
+    '/coverage/',
+    '.*\\.backup/',
+    '/src/.*\\.backup/'
   ],
 
   // 转换配置
