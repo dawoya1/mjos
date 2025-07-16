@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+        npx conventional-changelog -p angular -r 2 >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## 🚀 新版本发布
+          
+          ${{ steps.changelog.outputs.CHANGELOG }}
+          
+          ## 📦 安装
+          
+          ```bash
+          npm install mjos@${{ github.ref_name }}
+          ```
+          
+          ## 📚 文档
+          
+          - [API文档](https://github.com/magic-sword-studio/mjos/blob/main/docs/API.md)
+          - [使用示例](https://github.com/magic-sword-studio/mjos/blob/main/docs/EXAMPLES.md)
+          - [快速入门](https://github.com/magic-sword-studio/mjos/blob/main/docs/QUICKSTART.md)
+        draft: false
+        prerelease: false
+    
+    - name: Publish to NPM
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+    - name: Update documentation
+      run: |
+        npm run docs:build
+        npm run docs:deploy
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

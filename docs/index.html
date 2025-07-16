@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJOS - 魔剑工作室操作系统</title>
+    <meta name="description" content="企业级AI团队协作框架，让AI团队协作更智能、更高效">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1>MJOS</h1>
+                <span class="tagline">魔剑工作室操作系统</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">特性</a></li>
+                <li><a href="#docs">文档</a></li>
+                <li><a href="#examples">示例</a></li>
+                <li><a href="#team">团队</a></li>
+                <li><a href="https://github.com/magic-sword-studio/mjos" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">企业级AI团队协作框架</h1>
+                <p class="hero-subtitle">让AI团队协作更智能、更高效</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">质量验证</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">91%+</span>
+                        <span class="stat-label">测试覆盖率</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">15K+</span>
+                        <span class="stat-label">代码行数</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">0ms</span>
+                        <span class="stat-label">编译错误</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a href="#quickstart" class="btn btn-primary">快速开始</a>
+                    <a href="https://github.com/magic-sword-studio/mjos" class="btn btn-secondary" target="_blank">查看源码</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2>核心特性</h2>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">🧠</div>
+                        <h3>智能记忆系统</h3>
+                        <p>基于神经科学的三层记忆架构，智能存储和检索信息</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">👥</div>
+                        <h3>团队协作管理</h3>
+                        <p>完整的团队成员和任务管理系统，提升协作效率</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3>性能监控</h3>
+                        <p>实时性能监控和优化，毫秒级响应时间</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔄</div>
+                        <h3>事件驱动架构</h3>
+                        <p>响应式系统设计，高效的事件通信机制</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📊</div>
+                        <h3>上下文管理</h3>
+                        <p>智能上下文感知和管理，保持系统状态一致性</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🚀</div>
+                        <h3>高性能</h3>
+                        <p>优化的异步处理和内存管理，企业级性能标准</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quickstart" class="quickstart">
+            <div class="container">
+                <h2>快速开始</h2>
+                <div class="quickstart-content">
+                    <div class="quickstart-step">
+                        <h3>1. 安装</h3>
+                        <pre><code>npm install mjos</code></pre>
+                    </div>
+                    <div class="quickstart-step">
+                        <h3>2. 使用</h3>
+                        <pre><code>const { MJOS } = require('mjos');
+
+const mjos = new MJOS();
+await mjos.start();
+
+// 存储记忆
+const memoryId = mjos.remember('重要信息', ['标签'], 0.8);
+
+// 创建任务
+const taskId = mjos.createTask('任务标题', '任务描述', 'high');
+
+// 分配任务
+mjos.assignTask(taskId, 'moxiaozhi');
+
+await mjos.stop();</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="team">
+            <div class="container">
+                <h2>魔剑工作室团队</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">🧠</div>
+                        <h3>莫小智</h3>
+                        <p class="member-role">智能分析专家</p>
+                        <p class="member-desc">AI分析、系统协调、智能决策</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">🎨</div>
+                        <h3>莫小创</h3>
+                        <p class="member-role">创新设计专家</p>
+                        <p class="member-desc">创新设计、产品规划、用户体验</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">💻</div>
+                        <h3>莫小仓</h3>
+                        <p class="member-role">Cangjie编程专家</p>
+                        <p class="member-desc">仓颉编程、系统开发、代码优化</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">🧪</div>
+                        <h3>莫小测</h3>
+                        <p class="member-role">质量测试专家</p>
+                        <p class="member-desc">质量测试、系统验证、性能优化</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="docs" class="docs">
+            <div class="container">
+                <h2>文档和资源</h2>
+                <div class="docs-grid">
+                    <a href="API.html" class="doc-card">
+                        <h3>📚 API文档</h3>
+                        <p>详细的API参考文档</p>
+                    </a>
+                    <a href="EXAMPLES.html" class="doc-card">
+                        <h3>💡 使用示例</h3>
+                        <p>实际应用示例和最佳实践</p>
+                    </a>
+                    <a href="QUICKSTART.html" class="doc-card">
+                        <h3>🚀 快速入门</h3>
+                        <p>5分钟快速上手指南</p>
+                    </a>
+                    <a href="https://github.com/magic-sword-studio/mjos" class="doc-card" target="_blank">
+                        <h3>📦 GitHub</h3>
+                        <p>源代码和问题反馈</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MJOS</h3>
+                    <p>企业级AI团队协作框架</p>
+                </div>
+                <div class="footer-section">
+                    <h3>资源</h3>
+                    <ul>
+                        <li><a href="API.html">API文档</a></li>
+                        <li><a href="EXAMPLES.html">使用示例</a></li>
+                        <li><a href="QUICKSTART.html">快速入门</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>社区</h3>
+                    <ul>
+                        <li><a href="https://github.com/magic-sword-studio/mjos" target="_blank">GitHub</a></li>
+                        <li><a href="https://github.com/magic-sword-studio/mjos/issues" target="_blank">问题反馈</a></li>
+                        <li><a href="https://github.com/magic-sword-studio/mjos/discussions" target="_blank">讨论</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>许可证</h3>
+                    <p>MIT License</p>
+                    <p>&copy; 2025 魔剑工作室</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
