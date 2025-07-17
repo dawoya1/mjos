@@ -119,6 +119,10 @@ export declare class PerformanceMonitor extends EventEmitter {
     reset(): void;
     private calculateThroughput;
     private cleanupOldMetrics;
+    /**
+     * Force memory cleanup and garbage collection
+     */
+    private forceMemoryCleanup;
     private applyOptimizations;
     private generateOptimizations;
     /**

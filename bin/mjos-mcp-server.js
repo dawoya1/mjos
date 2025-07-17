@@ -99,6 +99,9 @@ class ProductionMJOSMCPServer {
         required: ['content']
       },
       handler: async (args) => {
+        if (!this.mjos || !this.mjos.running) {
+          throw new Error('MJOS system is not running. Please wait for system initialization.');
+        }
         return this.mjos.remember(args.content, args.tags || [], args.importance || 0.5);
       }
     });
@@ -115,6 +118,9 @@ class ProductionMJOSMCPServer {
         required: ['query']
       },
       handler: async (args) => {
+        if (!this.mjos || !this.mjos.running) {
+          throw new Error('MJOS system is not running. Please wait for system initialization.');
+        }
         return this.mjos.recall(args.query);
       }
     });
@@ -133,6 +139,9 @@ class ProductionMJOSMCPServer {
         required: ['title', 'description']
       },
       handler: async (args) => {
+        if (!this.mjos || !this.mjos.running) {
+          throw new Error('MJOS system is not running. Please wait for system initialization.');
+        }
         return this.mjos.createTask(args.title, args.description, args.priority || 'medium');
       }
     });
@@ -150,6 +159,9 @@ class ProductionMJOSMCPServer {
         required: ['taskId', 'assignee']
       },
       handler: async (args) => {
+        if (!this.mjos || !this.mjos.running) {
+          throw new Error('MJOS system is not running. Please wait for system initialization.');
+        }
         return this.mjos.assignTask(args.taskId, args.assignee);
       }
     });
@@ -163,7 +175,10 @@ class ProductionMJOSMCPServer {
         properties: {}
       },
       handler: async () => {
-        return this.mjos.getSystemStatus();
+        if (!this.mjos || !this.mjos.running) {
+          throw new Error('MJOS system is not running. Please wait for system initialization.');
+        }
+        return this.mjos.getStatus();
       }
     });
 
@@ -176,6 +191,9 @@ class ProductionMJOSMCPServer {
         properties: {}
       },
       handler: async () => {
+        if (!this.mjos || !this.mjos.running) {
+          throw new Error('MJOS system is not running. Please wait for system initialization.');
+        }
         return this.mjos.getPerformanceMetrics();
       }
     });

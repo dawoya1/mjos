@@ -334,6 +334,30 @@ class PerformanceMonitor extends events_1.EventEmitter {
                 this.activeAlerts.delete(id);
             }
         }
+        // Force memory cleanup if usage is high
+        if (this.metrics.memoryUsage.percentage > 80) {
+            this.forceMemoryCleanup();
+        }
+    }
+    /**
+     * Force memory cleanup and garbage collection
+     */
+    forceMemoryCleanup() {
+        try {
+            // Limit metrics history to prevent memory buildup
+            if (this.metricsHistory.length > 100) {
+                this.metricsHistory = this.metricsHistory.slice(-50);
+            }
+            // Force garbage collection if available
+            if (typeof global !== 'undefined' && global.gc) {
+                global.gc();
+                this.logger.debug('Forced garbage collection');
+            }
+            this.logger.info('Memory cleanup completed');
+        }
+        catch (error) {
+            this.logger.error('Memory cleanup failed:', error);
+        }
     }
     applyOptimizations() {
         const summary = this.getSummary();

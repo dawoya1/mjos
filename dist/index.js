@@ -60,7 +60,7 @@ __exportStar(require("./monitoring/index"), exports);
 class MJOS {
     constructor() {
         this.version = '2.0.0';
-        this.running = false;
+        this._running = false;
         // Initialize configuration first
         this.config = new index_1.ConfigManager({
             defaultConfig: {
@@ -229,6 +229,9 @@ class MJOS {
     getVersion() {
         return this.version;
     }
+    get running() {
+        return this._running;
+    }
     async start() {
         this.logger.info('Starting MJOS with enhanced infrastructure...');
         // Connect storage
@@ -238,7 +241,7 @@ class MJOS {
         await this.engine.start();
         // Store startup event in memory
         this.memorySystem.store({ event: 'system_start', timestamp: new Date() }, ['system', 'startup'], 0.8);
-        this.running = true;
+        this._running = true;
         this.logger.info('MJOS started successfully with all infrastructure modules!');
     }
     async stop() {
@@ -271,12 +274,12 @@ class MJOS {
         // Note: Memory system and knowledge graph are not destroyed here
         // to allow tests to access stored events. They will be cleaned up
         // when the process exits or in a separate cleanup method.
-        this.running = false;
+        this._running = false;
         this.logger.info('MJOS stopped successfully with all infrastructure modules!');
     }
     // Cleanup method for complete resource cleanup (used in tests)
     cleanup() {
-        if (this.running) {
+        if (this._running) {
             throw new Error('Cannot cleanup while MJOS is running. Call stop() first.');
         }
         // Destroy all modules with timers
@@ -293,7 +296,7 @@ class MJOS {
     getStatus() {
         return {
             version: this.version,
-            running: this.running,
+            running: this._running,
             engine: this.engine.getStatus(),
             memory: this.memorySystem.getStats(),
             knowledge: this.knowledgeGraph.getStats(),

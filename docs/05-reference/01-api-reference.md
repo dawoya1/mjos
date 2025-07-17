@@ -1,20 +1,19 @@
-# 📚 MJOS API 文档
+# MJOS API Reference
 
-> **完美企业级AI智能操作系统 - 96个测试100%通过，0个资源泄漏，生产就绪**
+Enterprise-grade AI team collaboration operating system API documentation.
 
-## 🏆 质量保证
+## Quality Metrics
 
-<div align="center">
+- **Tests**: 96/96 passing (100%)
+- **Coverage**: Comprehensive test coverage
+- **Resource Management**: Zero memory leaks
+- **Status**: Production ready
 
-**✅ 96个测试100%通过 | ✅ 0个资源泄漏 | ✅ 生产就绪**
+## Related Documentation
 
-</div>
-
-## 📖 相关文档
-
-- **[HTML主页](../index.html)** - 完整的项目介绍和功能展示
-- **[快速开始](../01-getting-started/01-quickstart.md)** - 安装和基础使用
-- **[系统架构](../02-architecture/01-system-architecture.md)** - 系统设计详解
+- **[Getting Started](../01-getting-started/01-quickstart.md)** - Installation and basic usage
+- **[System Architecture](../02-architecture/01-system-architecture.md)** - System design overview
+- **[CLI Reference](02-cli-reference.md)** - Command line interface
 
 ## 目录
 

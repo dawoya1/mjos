@@ -42,7 +42,7 @@ export * from './monitoring/index';
 // 主MJOS类
 export class MJOS {
   private version = '2.0.0';
-  private running = false;
+  private _running = false;
   private engine: MJOSEngine;
   private logger: Logger;
   private config: ConfigManager;
@@ -276,6 +276,10 @@ export class MJOS {
   getVersion(): string {
     return this.version;
   }
+
+  get running(): boolean {
+    return this._running;
+  }
   
   async start(): Promise<void> {
     this.logger.info('Starting MJOS with enhanced infrastructure...');
@@ -295,7 +299,7 @@ export class MJOS {
       0.8
     );
 
-    this.running = true;
+    this._running = true;
     this.logger.info('MJOS started successfully with all infrastructure modules!');
   }
   
@@ -346,13 +350,13 @@ export class MJOS {
     // to allow tests to access stored events. They will be cleaned up
     // when the process exits or in a separate cleanup method.
 
-    this.running = false;
+    this._running = false;
     this.logger.info('MJOS stopped successfully with all infrastructure modules!');
   }
 
   // Cleanup method for complete resource cleanup (used in tests)
   cleanup(): void {
-    if (this.running) {
+    if (this._running) {
       throw new Error('Cannot cleanup while MJOS is running. Call stop() first.');
     }
 
@@ -382,7 +386,7 @@ export class MJOS {
     } {
     return {
       version: this.version,
-      running: this.running,
+      running: this._running,
       engine: this.engine.getStatus(),
       memory: this.memorySystem.getStats(),
       knowledge: this.knowledgeGraph.getStats(),

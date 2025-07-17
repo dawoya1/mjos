@@ -37,7 +37,7 @@ export * from './security/index';
 export * from './monitoring/index';
 export declare class MJOS {
     private version;
-    private running;
+    private _running;
     private engine;
     private logger;
     private config;
@@ -60,6 +60,7 @@ export declare class MJOS {
     constructor();
     private setupModuleIntegration;
     getVersion(): string;
+    get running(): boolean;
     start(): Promise<void>;
     stop(): Promise<void>;
     cleanup(): void;
