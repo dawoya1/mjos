@@ -6,7 +6,7 @@
         "-y",
         "--registry",
         "https://registry.npmjs.org",
-        "mjos@2.1.9",
+        "mjos@2.1.10",
         "mcp-server"
       ],
       "env": {

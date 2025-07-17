@@ -1,24 +1,24 @@
-# 🎉 MJOS MCP Server v2.1.9 已就绪！
+# 🎉 MJOS MCP Server v2.1.10 已就绪！
 
 ## ✅ 发布状态
-- **版本**: v2.1.9
+- **版本**: v2.1.10
 - **发布时间**: 2025-07-17
 - **状态**: ✅ 已成功发布到npm
 - **测试状态**: ✅ 启动成功，所有工具可用，96个测试全部通过
-- **修复内容**: ✅ 修复了JSON通信问题，所有日志输出到stderr
-- **依赖更新**: ✅ 更新了rimraf、glob等依赖包，减少deprecated警告
+- **修复内容**: ✅ 修复了MCP配置显示问题，正确显示npm包使用方式
+- **配置修复**: ✅ 修复了配置示例，现在显示正确的命令格式
 
 ## 🚀 快速启动
 
-### 方法1: 使用npx (推荐)
+### 方法1: 全局安装 (推荐)
 ```bash
-npx mjos@2.1.9 mcp-server
+npm install -g mjos@2.1.10
+mjos-mcp-server
 ```
 
-### 方法2: 全局安装
+### 方法2: 使用npx
 ```bash
-npm install -g mjos@2.1.9
-mjos mcp-server
+npx -y mjos@2.1.10 mjos-mcp-server
 ```
 
 ## 📋 可用工具

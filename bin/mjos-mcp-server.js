@@ -200,9 +200,7 @@ class ProductionMJOSMCPServer {
       console.log(JSON.stringify({
         mcpServers: {
           mjos: {
-            command: "node",
-            args: ["bin/mjos-mcp-server.js"],
-            cwd: process.cwd(),
+            command: "mjos-mcp-server",
             env: { MJOS_LOG_LEVEL: "info" }
           }
         }
@@ -212,8 +210,18 @@ class ProductionMJOSMCPServer {
       console.log(JSON.stringify({
         mcpServers: {
           mjos: {
-            command: "node",
-            args: ["bin/mjos-mcp-server.js"],
+            command: "mjos-mcp-server",
+            env: { MJOS_LOG_LEVEL: "info" }
+          }
+        }
+      }, null, 2));
+
+      console.log('\n🔄 或使用npx (如果全局安装有问题):');
+      console.log(JSON.stringify({
+        mcpServers: {
+          mjos: {
+            command: "npx",
+            args: ["-y", "mjos@latest", "mjos-mcp-server"],
             env: { MJOS_LOG_LEVEL: "info" }
           }
         }
