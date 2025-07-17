@@ -12,6 +12,11 @@ describe('MemorySystem', () => {
     memorySystem = new MemorySystem();
   });
 
+  afterEach(() => {
+    // Clean up the memory system to prevent timer leaks
+    memorySystem.destroy();
+  });
+
   describe('store', () => {
     test('should store memory with default values', () => {
       const id = memorySystem.store('test content');
@@ -71,15 +76,15 @@ describe('MemorySystem', () => {
       const results = memorySystem.query({ tags: ['common'] });
       
       expect(results).toHaveLength(2);
-      expect(results[0].content).toBe('content1'); // Higher importance first
-      expect(results[1].content).toBe('content2');
+      expect(results[0]?.content).toBe('content1'); // Higher importance first
+      expect(results[1]?.content).toBe('content2');
     });
 
     test('should query with limit', () => {
       const results = memorySystem.query({ tags: ['common'], limit: 1 });
       
       expect(results).toHaveLength(1);
-      expect(results[0].content).toBe('content1');
+      expect(results[0]?.content).toBe('content1');
     });
 
     test('should query by importance range', () => {

@@ -4,8 +4,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build outputs
-dist/
+# Build outputs (keep dist/ for npm publishing)
+# dist/
 build/
 *.tsbuildinfo
 
@@ -169,3 +169,63 @@ temp/
 
 # Prettier cache
 .prettiercache
+
+# 测试数据和临时文件 (DO NOT PUBLISH)
+test-data/
+test-output/
+*.test.db
+*.test.log
+
+# 备份文件 (DO NOT PUBLISH)
+*-backup.md
+*-backup.js
+*-backup.ts
+*.backup
+backup/
+
+# 开发过程文件 (DO NOT PUBLISH)
+TODO.md
+NOTES.md
+SCRATCH.md
+dev-notes/
+development-logs/
+
+# 性能分析文件 (DO NOT PUBLISH)
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+
+# 安全相关文件 (DO NOT PUBLISH)
+secrets/
+private-keys/
+certificates/
+*.pem
+*.key
+*.crt
+
+# 用户特定配置 (DO NOT PUBLISH)
+.vscode/settings.json
+.vscode/launch.json
+.idea/workspace.xml
+.idea/tasks.xml
+
+# 系统生成的文档缓存 (DO NOT PUBLISH)
+docs/.cache/
+docs/generated/
+docs/temp/
+
+# MCP服务器运行时文件 (DO NOT PUBLISH)
+.mjos/
+mcp-server.log
+mcp-*.pid
+
+# 监控和日志文件 (DO NOT PUBLISH)
+monitoring/
+metrics/
+audit-logs/
+*.audit.log
+
+# 第三方工具生成的文件 (DO NOT PUBLISH)
+.sonar/
+.scannerwork/
+sonar-project.properties.local

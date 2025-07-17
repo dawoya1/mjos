@@ -1,0 +1,59 @@
+{
+  "knowledge": {
+    "knowledge_1752742601752_4hxy2kekj": {
+      "type": "fact",
+      "content": "Test knowledge",
+      "metadata": {
+        "domain": "test",
+        "confidence": 0.9,
+        "importance": 0.8,
+        "tags": [
+          "test"
+        ],
+        "version": 1,
+        "source": "test"
+      },
+      "relationships": [],
+      "id": "knowledge_1752742601752_4hxy2kekj",
+      "createdAt": "2025-07-17T08:56:41.752Z",
+      "updatedAt": "2025-07-17T08:56:41.752Z"
+    },
+    "knowledge_1752742601763_kmbuit8ub": {
+      "type": "rule",
+      "content": {
+        "conclusion": {
+          "facts": {},
+          "input": {
+            "premises": [
+              "All tests should pass",
+              "This is a test"
+            ],
+            "conclusion": "This should pass"
+          },
+          "constraints": []
+        },
+        "reasoning": []
+      },
+      "metadata": {
+        "source": "reasoning",
+        "confidence": 1,
+        "importance": 1,
+        "tags": [
+          "reasoning",
+          "derived"
+        ],
+        "domain": "reasoning",
+        "version": 1
+      },
+      "relationships": [],
+      "id": "knowledge_1752742601763_kmbuit8ub",
+      "createdAt": "2025-07-17T08:56:41.763Z",
+      "updatedAt": "2025-07-17T08:56:41.763Z"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "timestamp": "2025-07-17T08:56:41.763Z",
+    "count": 2
+  }
+}

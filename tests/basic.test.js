@@ -16,12 +16,14 @@ describe('MJOS Basic Tests', () => {
     if (mjos.getStatus().engine.running) {
       await mjos.stop();
     }
+    // Clean up all resources to prevent timer leaks
+    mjos.cleanup();
   });
 
   describe('Initialization', () => {
     test('should initialize correctly', () => {
       expect(mjos).toBeDefined();
-      expect(mjos.getVersion()).toBe('1.0.0');
+      expect(mjos.getVersion()).toBe('2.0.0');
     });
 
     test('should have all subsystems', () => {
@@ -76,12 +78,21 @@ describe('MJOS Basic Tests', () => {
   describe('Context Management', () => {
     test('should manage context', () => {
       const contextManager = mjos.getContextManager();
-      
-      contextManager.set('test-key', 'test-value');
-      expect(contextManager.get('test-key')).toBe('test-value');
-      
-      expect(contextManager.has('test-key')).toBe(true);
-      expect(contextManager.has('non-existent')).toBe(false);
+
+      // Create a session
+      const sessionId = contextManager.createSession();
+      expect(sessionId).toBeDefined();
+
+      // Set and get working memory
+      const success = contextManager.setWorkingMemory(sessionId, 'test-key', 'test-value');
+      expect(success).toBe(true);
+
+      const value = contextManager.getWorkingMemory(sessionId, 'test-key');
+      expect(value).toBe('test-value');
+
+      // Check session exists
+      const session = contextManager.getSession(sessionId);
+      expect(session).toBeDefined();
     });
   });
 
@@ -89,7 +100,7 @@ describe('MJOS Basic Tests', () => {
     test('should provide comprehensive status', () => {
       const status = mjos.getStatus();
       
-      expect(status.version).toBe('1.0.0');
+      expect(status.version).toBe('2.0.0');
       expect(status.engine).toBeDefined();
       expect(status.memory).toBeDefined();
       expect(status.team).toBeDefined();
@@ -174,25 +185,29 @@ describe('MJOS Basic Tests', () => {
     test('should handle context manager operations', () => {
       const contextManager = mjos.getContextManager();
 
-      // Test all context operations
-      contextManager.set('key1', 'value1');
-      contextManager.set('key2', { nested: 'object' });
+      // Create a session for testing
+      const sessionId = contextManager.createSession();
 
-      expect(contextManager.get('key1')).toBe('value1');
-      expect(contextManager.get('key2')).toEqual({ nested: 'object' });
-      expect(contextManager.get('non-existent')).toBeUndefined();
+      // Test working memory operations
+      contextManager.setWorkingMemory(sessionId, 'key1', 'value1');
+      contextManager.setWorkingMemory(sessionId, 'key2', { nested: 'object' });
 
-      expect(contextManager.has('key1')).toBe(true);
-      expect(contextManager.has('non-existent')).toBe(false);
+      expect(contextManager.getWorkingMemory(sessionId, 'key1')).toBe('value1');
+      expect(contextManager.getWorkingMemory(sessionId, 'key2')).toEqual({ nested: 'object' });
+      expect(contextManager.getWorkingMemory(sessionId, 'non-existent')).toBeUndefined();
 
-      expect(contextManager.delete('key1')).toBe(true);
-      expect(contextManager.delete('non-existent')).toBe(false);
+      // Test session operations
+      expect(contextManager.getSession(sessionId)).toBeDefined();
+      expect(contextManager.getSession('non-existent')).toBeUndefined();
 
-      const allContext = contextManager.getAll();
-      expect(allContext).toEqual({ key2: { nested: 'object' } });
+      // Test session deletion
+      expect(contextManager.deleteSession(sessionId)).toBe(true);
+      expect(contextManager.deleteSession('non-existent')).toBe(false);
 
-      contextManager.clear();
-      expect(contextManager.getAll()).toEqual({});
+      // Test session stats
+      const stats = contextManager.getStats();
+      expect(stats).toBeDefined();
+      expect(typeof stats.totalSessions).toBe('number');
     });
 
     test('should handle engine lifecycle edge cases', async () => {

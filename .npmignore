@@ -1,7 +1,7 @@
-# Source files
+# Source files (keep examples for users)
 src/
 tests/
-examples/
+# examples/ - keep for users
 
 # Development files
 *.ts
@@ -11,10 +11,11 @@ jest.config.js
 .eslintrc.js
 .prettierrc
 
-# Documentation source
-docs/
+# Documentation source (keep docs for users)
+# docs/ - keep for users
 *.md
 !README.md
+!docs/**/*.md
 
 # Development tools
 .github/

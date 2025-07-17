@@ -16,11 +16,13 @@ describe('MJOS Integration', () => {
     if (mjos.getStatus().engine.running) {
       await mjos.stop();
     }
+    // Cleanup resources to prevent leaks
+    mjos.cleanup();
   });
 
   describe('Initialization', () => {
     test('should initialize with correct version', () => {
-      expect(mjos.getVersion()).toBe('1.0.0');
+      expect(mjos.getVersion()).toBe('2.0.0');
     });
 
     test('should initialize with all subsystems', () => {
@@ -47,16 +49,19 @@ describe('MJOS Integration', () => {
 
     test('should store startup and shutdown events in memory', async () => {
       await mjos.start();
+
+      // Check startup events before stopping
+      const startupEvents = mjos.recall({ tags: ['startup'] });
+      expect(startupEvents).toHaveLength(1);
+
       await mjos.stop();
+
+      // Check shutdown events immediately after stopping but before destroy
+      const shutdownEvents = mjos.recall({ tags: ['shutdown'] });
+      expect(shutdownEvents).toHaveLength(1);
 
       const systemEvents = mjos.recall({ tags: ['system'] });
       expect(systemEvents.length).toBeGreaterThanOrEqual(2);
-      
-      const startupEvents = mjos.recall({ tags: ['startup'] });
-      const shutdownEvents = mjos.recall({ tags: ['shutdown'] });
-      
-      expect(startupEvents).toHaveLength(1);
-      expect(shutdownEvents).toHaveLength(1);
     });
   });
 
@@ -95,8 +100,8 @@ describe('MJOS Integration', () => {
       const tasks = teamManager.getTasks({ assignedTo: 'moxiaozhi' });
       
       expect(tasks).toHaveLength(1);
-      expect(tasks[0].title).toBe('Integration Test Task');
-      expect(tasks[0].status).toBe('in_progress');
+      expect(tasks[0]?.title).toBe('Integration Test Task');
+      expect(tasks[0]?.status).toBe('in_progress');
     });
 
     test('should access team manager directly', () => {
@@ -111,10 +116,15 @@ describe('MJOS Integration', () => {
   describe('Context Management Integration', () => {
     test('should manage context through context manager', () => {
       const contextManager = mjos.getContextManager();
-      
+
+      // Ensure default session exists
+      if (!contextManager.getSession('default')) {
+        contextManager.createSession('default');
+      }
+
       contextManager.set('project', 'MJOS Testing');
       contextManager.set('phase', 'integration');
-      
+
       expect(contextManager.get('project')).toBe('MJOS Testing');
       expect(contextManager.get('phase')).toBe('integration');
       
@@ -135,8 +145,8 @@ describe('MJOS Integration', () => {
       await mjos.start();
       
       const status = mjos.getStatus();
-      
-      expect(status.version).toBe('1.0.0');
+
+      expect(status.version).toBe('2.0.0');
       expect(status.engine.running).toBe(true);
       expect(status.memory.totalMemories).toBeGreaterThan(0);
       expect(status.team.totalMembers).toBe(4);
@@ -174,18 +184,24 @@ describe('MJOS Integration', () => {
       const teamManager = mjos.getTeamManager();
       const tasks = teamManager.getTasks({ assignedTo: 'moxiaozhi' });
       expect(tasks).toHaveLength(1);
-      expect(tasks[0].priority).toBe('urgent');
+      expect(tasks[0]?.priority).toBe('urgent');
     });
 
     test('should maintain context across operations', () => {
       const contextManager = mjos.getContextManager();
+
+      // Ensure default session exists
+      if (!contextManager.getSession('default')) {
+        contextManager.createSession('default');
+      }
+
       contextManager.set('current-user', 'test-user');
       contextManager.set('session-id', 'test-session');
-      
+
       // Perform operations that might use context
-      const taskId = mjos.createTask('Context Task', 'Task with context');
+      mjos.createTask('Context Task', 'Task with context');
       mjos.remember('Context memory', ['context']);
-      
+
       // Verify context is maintained
       expect(contextManager.get('current-user')).toBe('test-user');
       expect(contextManager.get('session-id')).toBe('test-session');

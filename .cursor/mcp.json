@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mjos": {
+      "command": "node",
+      "args": ["bin/mjos-mcp-server.js"],
+      "env": {
+        "MJOS_LOG_LEVEL": "info",
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}

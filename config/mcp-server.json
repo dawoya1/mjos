@@ -1,0 +1,44 @@
+{
+  "name": "mjos-mcp-server",
+  "version": "2.0.0",
+  "description": "MJOS MCP Server - 企业级AI团队协作系统",
+  "author": "Magic Sword Studio",
+  "license": "MIT",
+  "logLevel": "info",
+  "enabledFeatures": {
+    "memory": true,
+    "collaboration": true,
+    "context": true,
+    "reasoning": true,
+    "workflow": true,
+    "monitoring": true,
+    "security": true
+  },
+  "server": {
+    "host": "localhost",
+    "port": 3000,
+    "timeout": 30000,
+    "maxConnections": 100
+  },
+  "memory": {
+    "maxSize": "1GB",
+    "persistenceEnabled": true,
+    "compressionEnabled": true
+  },
+  "security": {
+    "authEnabled": false,
+    "rateLimitEnabled": true,
+    "maxRequestsPerMinute": 60
+  },
+  "monitoring": {
+    "metricsEnabled": true,
+    "healthCheckEnabled": true,
+    "alertingEnabled": true
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "destination": "console",
+    "rotationEnabled": false
+  }
+}

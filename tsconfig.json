@@ -27,13 +27,21 @@
     "paths": {
       "@core/*": ["core/*"],
       "@memory/*": ["memory/*"],
+      "@knowledge/*": ["knowledge/*"],
+      "@context/*": ["context/*"],
+      "@reasoning/*": ["reasoning/*"],
+      "@agents/*": ["agents/*"],
+      "@roles/*": ["roles/*"],
       "@team/*": ["team/*"],
-      "@mpml/*": ["mpml/*"],
-      "@mhpf/*": ["mhpf/*"],
-      "@mpeoas/*": ["mpeoas/*"],
-      "@mmpt/*": ["mmpt/*"],
+      "@communication/*": ["communication/*"],
+      "@api/*": ["api/*"],
+      "@cli/*": ["cli/*"],
+      "@sdk/*": ["sdk/*"],
       "@mcp/*": ["mcp/*"],
-      "@utils/*": ["utils/*"],
+      "@storage/*": ["storage/*"],
+      "@security/*": ["security/*"],
+      "@monitoring/*": ["monitoring/*"],
+      "@performance/*": ["performance/*"],
       "@types/*": ["types/*"]
     }
   },
@@ -45,7 +53,6 @@
     "dist",
     "tests",
     "**/*.test.ts",
-    "**/*.spec.ts",
-    "src/**/*.backup/**/*"
+    "**/*.spec.ts"
   ]
 }

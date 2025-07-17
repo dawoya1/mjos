@@ -33,7 +33,14 @@ describe('TeamManager', () => {
         role: '测试角色',
         capabilities: ['testing'],
         status: 'active',
-        expertise: ['测试专业']
+        expertise: ['测试专业'],
+        joinedAt: new Date(),
+        lastActivity: new Date(),
+        performance: {
+          tasksCompleted: 0,
+          successRate: 1.0,
+          collaborationScore: 1.0
+        }
       };
 
       teamManager.addMember(newMember);
@@ -74,8 +81,8 @@ describe('TeamManager', () => {
 
       const tasks = teamManager.getTasks();
       expect(tasks).toHaveLength(1);
-      expect(tasks[0].title).toBe('Test Task');
-      expect(tasks[0].priority).toBe('high');
+      expect(tasks[0]?.title).toBe('Test Task');
+      expect(tasks[0]?.priority).toBe('high');
     });
 
     test('should assign task to member', () => {
@@ -91,8 +98,8 @@ describe('TeamManager', () => {
       expect(assigned).toBe(true);
       
       const tasks = teamManager.getTasks();
-      expect(tasks[0].assignedTo).toBe('moxiaozhi');
-      expect(tasks[0].status).toBe('in_progress');
+      expect(tasks[0]?.assignedTo).toBe('moxiaozhi');
+      expect(tasks[0]?.status).toBe('in_progress');
     });
 
     test('should not assign task to non-existent member', () => {
@@ -120,7 +127,7 @@ describe('TeamManager', () => {
       expect(updated).toBe(true);
       
       const tasks = teamManager.getTasks();
-      expect(tasks[0].status).toBe('completed');
+      expect(tasks[0]?.status).toBe('completed');
     });
 
     test('should filter tasks by assignee', () => {
@@ -145,10 +152,10 @@ describe('TeamManager', () => {
       const chuangTasks = teamManager.getTasks({ assignedTo: 'moxiaochuang' });
 
       expect(zhiTasks).toHaveLength(1);
-      expect(zhiTasks[0].title).toBe('Task 1');
-      
+      expect(zhiTasks[0]?.title).toBe('Task 1');
+
       expect(chuangTasks).toHaveLength(1);
-      expect(chuangTasks[0].title).toBe('Task 2');
+      expect(chuangTasks[0]?.title).toBe('Task 2');
     });
 
     test('should filter tasks by status', () => {
@@ -159,7 +166,7 @@ describe('TeamManager', () => {
         priority: 'medium'
       });
 
-      const taskId2 = teamManager.createTask({
+      teamManager.createTask({
         title: 'Task 2',
         description: 'Description 2',
         status: 'pending',
@@ -172,10 +179,10 @@ describe('TeamManager', () => {
       const pendingTasks = teamManager.getTasks({ status: 'pending' });
 
       expect(completedTasks).toHaveLength(1);
-      expect(completedTasks[0].title).toBe('Task 1');
-      
+      expect(completedTasks[0]?.title).toBe('Task 1');
+
       expect(pendingTasks).toHaveLength(1);
-      expect(pendingTasks[0].title).toBe('Task 2');
+      expect(pendingTasks[0]?.title).toBe('Task 2');
     });
   });
 
@@ -188,8 +195,8 @@ describe('TeamManager', () => {
       
       const activeSessions = teamManager.getActiveSessions();
       expect(activeSessions).toHaveLength(1);
-      expect(activeSessions[0].topic).toBe('Test Topic');
-      expect(activeSessions[0].participants).toEqual(['moxiaozhi', 'moxiaochuang']);
+      expect(activeSessions[0]?.topic).toBe('Test Topic');
+      expect(activeSessions[0]?.participants).toEqual(['moxiaozhi', 'moxiaochuang']);
     });
 
     test('should end collaboration session', () => {
@@ -219,7 +226,7 @@ describe('TeamManager', () => {
         priority: 'medium'
       });
 
-      const taskId2 = teamManager.createTask({
+      teamManager.createTask({
         title: 'Task 2',
         description: 'Description 2',
         status: 'pending',
@@ -252,7 +259,14 @@ describe('TeamManager', () => {
         role: '测试角色',
         capabilities: ['testing'],
         status: 'active',
-        expertise: ['测试专业']
+        expertise: ['测试专业'],
+        joinedAt: new Date(),
+        lastActivity: new Date(),
+        performance: {
+          tasksCompleted: 0,
+          successRate: 1.0,
+          collaborationScore: 1.0
+        }
       };
 
       teamManager.addMember(newMember);
