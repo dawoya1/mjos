@@ -1,11 +1,16 @@
 {
   "mcpServers": {
     "mjos": {
-      "command": "node",
-      "args": ["bin/mjos-mcp-server.js"],
+      "command": "npx",
+      "args": [
+        "-y",
+        "--registry",
+        "https://registry.npmjs.org",
+        "mjos@2.1.9",
+        "mcp-server"
+      ],
       "env": {
-        "MJOS_LOG_LEVEL": "info",
-        "NODE_ENV": "development"
+        "MJOS_LOG_LEVEL": "info"
       }
     }
   }

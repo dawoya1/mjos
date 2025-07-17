@@ -5,7 +5,20 @@
  * 生产级MCP服务器入口点
  */
 
-const { MJOS } = require('../dist/index.js');
+// 尝试从不同路径加载MJOS
+let MJOS;
+try {
+  // 首先尝试从当前包加载
+  MJOS = require('../dist/index.js').MJOS;
+} catch (e1) {
+  try {
+    // 然后尝试从npm包加载
+    MJOS = require('mjos').MJOS;
+  } catch (e2) {
+    console.error('❌ 无法加载MJOS模块:', e2.message);
+    process.exit(1);
+  }
+}
 const path = require('path');
 const fs = require('fs');
 

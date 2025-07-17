@@ -25,6 +25,7 @@ export declare class MJOSCli {
     private listWorkflows;
     private executeWorkflow;
     private interactiveMode;
+    private startMCPServer;
     private showInteractiveHelp;
     private executeInteractiveCommand;
     run(): Promise<void>;

@@ -55,6 +55,14 @@ export class MJOSCli {
         await this.stopSystem();
       });
 
+    // MCP Server command
+    this.program
+      .command('mcp-server')
+      .description('启动MCP服务器')
+      .action(async () => {
+        await this.startMCPServer();
+      });
+
     // Memory commands
     const memoryCmd = this.program
       .command('memory')
@@ -640,6 +648,257 @@ export class MJOSCli {
       } catch (error) {
         console.error(chalk.red('命令执行错误:'), error);
       }
+    }
+  }
+
+  private async startMCPServer(): Promise<void> {
+    try {
+      // 使用官方MCP SDK创建服务器
+      const { McpServer } = await import('@modelcontextprotocol/sdk/server/mcp.js');
+      const { StdioServerTransport } = await import('@modelcontextprotocol/sdk/server/stdio.js');
+      const { z } = await import('zod');
+
+      // 创建MCP服务器
+      const mcpServer = new McpServer({
+        name: 'mjos',
+        version: '2.1.6'
+      });
+
+      // 重定向所有console输出到stderr，确保stdout纯净
+      const originalConsoleLog = console.log;
+      const originalConsoleError = console.error;
+      const originalConsoleWarn = console.warn;
+      const originalConsoleInfo = console.info;
+      const originalConsoleDebug = console.debug;
+
+      // 重定向所有console输出到stderr
+      console.log = (...args) => process.stderr.write(args.join(' ') + '\n');
+      console.error = (...args) => process.stderr.write(args.join(' ') + '\n');
+      console.warn = (...args) => process.stderr.write(args.join(' ') + '\n');
+      console.info = (...args) => process.stderr.write(args.join(' ') + '\n');
+      console.debug = (...args) => process.stderr.write(args.join(' ') + '\n');
+
+      // 设置环境变量以减少日志输出
+      process.env.MJOS_LOG_LEVEL = 'error';
+
+      // 启动MJOS系统（所有日志会输出到stderr）
+      await this.mjos.start();
+
+      // 注册MJOS工具
+      mcpServer.registerTool(
+        'mjos_remember',
+        {
+          title: '存储记忆到MJOS系统',
+          description: '存储记忆到MJOS系统',
+          inputSchema: {
+            content: z.string().describe('要记忆的内容'),
+            tags: z.array(z.string()).optional().describe('标签'),
+            importance: z.number().min(0).max(1).optional().describe('重要性')
+          }
+        },
+        async ({ content, tags, importance }: { content: string; tags?: string[] | undefined; importance?: number | undefined }) => {
+          try {
+            const memory = await (this.mjos as any).memory.store({
+              content,
+              tags: tags || [],
+              importance: importance || 0.5,
+              timestamp: new Date()
+            });
+            return {
+              content: [{
+                type: 'text',
+                text: `记忆已存储，ID: ${memory.id}`
+              }]
+            };
+          } catch (error) {
+            return {
+              content: [{
+                type: 'text',
+                text: `存储失败: ${error instanceof Error ? error.message : String(error)}`
+              }],
+              isError: true
+            };
+          }
+        }
+      );
+
+      mcpServer.registerTool(
+        'mjos_recall',
+        {
+          title: '从MJOS系统检索记忆',
+          description: '从MJOS系统检索记忆',
+          inputSchema: {
+            query: z.string().optional().describe('查询内容'),
+            tags: z.array(z.string()).optional().describe('标签过滤'),
+            limit: z.number().optional().describe('结果数量限制')
+          }
+        },
+        async ({ query, tags, limit }: { query?: string | undefined; tags?: string[] | undefined; limit?: number | undefined }) => {
+          try {
+            const memories = await (this.mjos as any).memory.search({
+              query: query || '',
+              tags: tags || [],
+              limit: limit || 10
+            });
+            return {
+              content: [{
+                type: 'text',
+                text: JSON.stringify(memories, null, 2)
+              }]
+            };
+          } catch (error) {
+            return {
+              content: [{
+                type: 'text',
+                text: `检索失败: ${error instanceof Error ? error.message : String(error)}`
+              }],
+              isError: true
+            };
+          }
+        }
+      );
+      mcpServer.registerTool(
+        'mjos_create_task',
+        {
+          title: '创建新任务',
+          description: '创建新任务',
+          inputSchema: {
+            title: z.string().describe('任务标题'),
+            description: z.string().optional().describe('任务描述'),
+            priority: z.enum(['low', 'medium', 'high']).optional().describe('优先级')
+          }
+        },
+        async ({ title, description, priority }: { title: string; description?: string | undefined; priority?: 'low' | 'medium' | 'high' | undefined }) => {
+          try {
+            const task = await (this.mjos as any).team.createTask({
+              title,
+              description: description || '',
+              priority: priority || 'medium',
+              status: 'pending',
+              createdAt: new Date()
+            });
+            return {
+              content: [{
+                type: 'text',
+                text: `任务已创建，ID: ${task.id}`
+              }]
+            };
+          } catch (error) {
+            return {
+              content: [{
+                type: 'text',
+                text: `创建失败: ${error instanceof Error ? error.message : String(error)}`
+              }],
+              isError: true
+            };
+          }
+        }
+      );
+
+      mcpServer.registerTool(
+        'mjos_assign_task',
+        {
+          title: '分配任务给团队成员',
+          description: '分配任务给团队成员',
+          inputSchema: {
+            taskId: z.string().describe('任务ID'),
+            memberId: z.string().describe('成员ID')
+          }
+        },
+        async ({ taskId, memberId }: { taskId: string; memberId: string }) => {
+          try {
+            await (this.mjos as any).team.assignTask(taskId, memberId);
+            return {
+              content: [{
+                type: 'text',
+                text: `任务 ${taskId} 已分配给成员 ${memberId}`
+              }]
+            };
+          } catch (error) {
+            return {
+              content: [{
+                type: 'text',
+                text: `分配失败: ${error instanceof Error ? error.message : String(error)}`
+              }],
+              isError: true
+            };
+          }
+        }
+      );
+
+      mcpServer.registerTool(
+        'mjos_get_status',
+        {
+          title: '获取MJOS系统状态',
+          description: '获取MJOS系统状态',
+          inputSchema: {}
+        },
+        async () => {
+          try {
+            const status = await this.mjos.getStatus();
+            return {
+              content: [{
+                type: 'text',
+                text: JSON.stringify(status, null, 2)
+              }]
+            };
+          } catch (error) {
+            return {
+              content: [{
+                type: 'text',
+                text: `获取状态失败: ${error instanceof Error ? error.message : String(error)}`
+              }],
+              isError: true
+            };
+          }
+        }
+      );
+
+      mcpServer.registerTool(
+        'mjos_performance_metrics',
+        {
+          title: '获取性能指标',
+          description: '获取性能指标',
+          inputSchema: {}
+        },
+        async () => {
+          try {
+            const metrics = await (this.mjos as any).performance.getMetrics();
+            return {
+              content: [{
+                type: 'text',
+                text: JSON.stringify(metrics, null, 2)
+              }]
+            };
+          } catch (error) {
+            return {
+              content: [{
+                type: 'text',
+                text: `获取指标失败: ${error instanceof Error ? error.message : String(error)}`
+              }],
+              isError: true
+            };
+          }
+        }
+      );
+
+      // 创建stdio传输并连接
+      const transport = new StdioServerTransport();
+      await mcpServer.connect(transport);
+
+      // 输出启动成功信息到stderr（不影响MCP通信）
+      process.stderr.write('✅ MJOS MCP Server started successfully\n');
+      process.stderr.write('📋 Available tools: mjos_remember, mjos_recall, mjos_create_task, mjos_assign_task, mjos_get_status, mjos_performance_metrics\n');
+
+      // 保持进程运行
+      process.on('SIGINT', () => {
+        process.stderr.write('🛑 MJOS MCP Server shutting down...\n');
+        process.exit(0);
+      });
+
+    } catch (error) {
+      process.stderr.write(`❌ Failed to start MCP Server: ${error}\n`);
+      process.exit(1);
     }
   }
 

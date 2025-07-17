@@ -117,9 +117,10 @@ export class Logger {
 
     const transports: winston.transport[] = [];
 
-    // Console transport with colors
+    // Console transport with colors - 输出到stderr以避免干扰MCP通信
     if (options.enableConsole !== false) {
       transports.push(new winston.transports.Console({
+        stderrLevels: ['error', 'warn', 'info', 'verbose', 'debug', 'silly'],
         format: winston.format.combine(
           winston.format.timestamp(),
           winston.format.colorize(),
