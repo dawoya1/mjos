@@ -1,33 +1,21 @@
-# 🗡️ MJOS - 魔剑工作室操作系统
+# MJOS - AI Team Collaboration OS
 
-> **完美企业级AI智能操作系统 - 96个测试100%通过，0个资源泄漏，生产就绪**
-
-> **最后更新时间**: 2025-07-17 09:05:30 UTC
-> **文档版本**: v2.1.0
-> **更新内容**: 完美企业级质量达成，所有测试通过，零资源泄漏
-
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![npm version](https://badge.fury.io/js/mjos.svg)](https://badge.fury.io/js/mjos)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen.svg)]()
-[![Quality](https://img.shields.io/badge/quality-enterprise%20grade-gold.svg)]()
-[![Resource Leaks](https://img.shields.io/badge/resource%20leaks-0-brightgreen.svg)]()
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2.1.10-blue.svg)]()
 
-## 🏆 企业级质量保证
+Enterprise-grade AI team collaboration operating system with memory management, knowledge graphs, team coordination, and MCP protocol integration.
 
-<div align="center">
+## Features
 
-| 指标 | 状态 | 描述 |
-|------|------|------|
-| **测试通过率** | ✅ 96/96 (100%) | 所有测试完美通过 |
-| **资源泄漏** | ✅ 0个 | 无定时器、内存泄漏 |
-| **生产就绪** | ✅ 100% | 企业级架构设计 |
-| **MCP支持** | ✅ 完整 | 支持所有主流客户端 |
-
-</div>
-
-MJOS (Magic Sword Studio Operating System) 是一个**完美企业级AI智能操作系统**，经过96个测试的全面验证，实现了0个资源泄漏的完美资源管理，提供完整的智能体管理、知识图谱、推理引擎、工作流自动化等功能。
+- **Memory System**: Persistent memory with tagging and importance scoring
+- **Knowledge Graph**: Entity relationship mapping and semantic search
+- **Team Management**: Role-based collaboration and task assignment
+- **Workflow Engine**: Automated process orchestration
+- **MCP Integration**: Model Context Protocol support for AI tools
+- **Performance Monitoring**: Real-time system metrics and health checks
+- **Security**: Role-based access control and audit logging
 
 ## 📖 文档中心
 

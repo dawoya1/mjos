@@ -1,6 +1,6 @@
 {
   "name": "mjos",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "Magic Sword Studio Operating System - Perfect Enterprise-Grade AI Operating System with 96 tests 100% passed, 0 resource leaks, production-ready",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

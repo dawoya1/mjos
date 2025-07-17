@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJOS System Status</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background-color: var(--success-color);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-warning {
+            background-color: var(--warning-color);
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-offline {
+            background-color: var(--error-color);
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .metric-value {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--surface-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .progress-fill.error {
+            background-color: var(--error-color);
+        }
+        
+        .refresh-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s;
+        }
+        
+        .refresh-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>MJOS Status</h1>
+                <span class="version">v2.1.10</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#health">Health</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 2rem;">
+        <section class="section">
+            <h2>System Overview</h2>
+            <div class="status-dashboard">
+                <div class="status-card">
+                    <h3>Overall Status</h3>
+                    <div class="status-value success">
+                        <span class="status-indicator status-online"></span>
+                        Operational
+                    </div>
+                </div>
+                <div class="status-card">
+                    <h3>Uptime</h3>
+                    <div class="status-value" id="uptime">2h 34m 12s</div>
+                </div>
+                <div class="status-card">
+                    <h3>Active Users</h3>
+                    <div class="status-value">1</div>
+                </div>
+                <div class="status-card">
+                    <h3>Response Time</h3>
+                    <div class="status-value" id="responseTime">45ms</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="section">
+            <h2>Service Status</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Core System</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            MJOS Engine
+                        </span>
+                        <span class="metric-value success">Running</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            Memory System
+                        </span>
+                        <span class="metric-value success">Active</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            Knowledge Graph
+                        </span>
+                        <span class="metric-value success">Operational</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>MCP Server</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            Server Status
+                        </span>
+                        <span class="metric-value success">Running</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Connected Clients</span>
+                        <span class="metric-value">1</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Available Tools</span>
+                        <span class="metric-value">6</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Team Management</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            Team System
+                        </span>
+                        <span class="metric-value success">Active</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Active Members</span>
+                        <span class="metric-value">4</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Pending Tasks</span>
+                        <span class="metric-value">8</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance" class="section bg-light">
+            <h2>Performance Metrics</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>System Resources</h3>
+                    <div class="metric-row">
+                        <div style="flex: 1;">
+                            <div class="metric-label">CPU Usage</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 12%"></div>
+                            </div>
+                            <div class="metric-value">12%</div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <div style="flex: 1;">
+                            <div class="metric-label">Memory Usage</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill warning" style="width: 78%"></div>
+                            </div>
+                            <div class="metric-value">78%</div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <div style="flex: 1;">
+                            <div class="metric-label">Disk Usage</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 34%"></div>
+                            </div>
+                            <div class="metric-value">34%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Network & I/O</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Requests/min</span>
+                        <span class="metric-value" id="requestsPerMin">3.2</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Avg Response Time</span>
+                        <span class="metric-value" id="avgResponseTime">45ms</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Error Rate</span>
+                        <span class="metric-value success">0.1%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Throughput</span>
+                        <span class="metric-value">120 req/s</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Cache & Storage</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Cache Hit Rate</span>
+                        <span class="metric-value success">94%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Storage Used</span>
+                        <span class="metric-value">234 MB</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Memory Entries</span>
+                        <span class="metric-value">1,247</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Knowledge Nodes</span>
+                        <span class="metric-value">892</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="health" class="section">
+            <h2>Health Checks</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>System Health</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            Database Connection
+                        </span>
+                        <span class="metric-value success">Healthy</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-warning"></span>
+                            Memory Usage
+                        </span>
+                        <span class="metric-value warning">High (78%)</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">
+                            <span class="status-indicator status-online"></span>
+                            Event Loop
+                        </span>
+                        <span class="metric-value success">Normal</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Events</h3>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                        <div class="metric-row">
+                            <span>System started</span>
+                            <span>2h 34m ago</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Memory optimization</span>
+                            <span>1h 12m ago</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>High memory warning</span>
+                            <span>23m ago</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Task completed</span>
+                            <span>5m ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="last-updated">
+            Last updated: <span id="lastUpdated">2025-07-17 20:15:32</span>
+        </div>
+    </main>
+
+    <button class="refresh-button" onclick="refreshStatus()" title="Refresh Status">
+        ↻
+    </button>
+
+    <script>
+        function refreshStatus() {
+            // Simulate data refresh
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = now.toLocaleString();
+            
+            // Update some random metrics
+            const responseTime = Math.floor(Math.random() * 50) + 30;
+            document.getElementById('responseTime').textContent = responseTime + 'ms';
+            document.getElementById('avgResponseTime').textContent = responseTime + 'ms';
+            
+            const requestsPerMin = (Math.random() * 5 + 1).toFixed(1);
+            document.getElementById('requestsPerMin').textContent = requestsPerMin;
+            
+            // Update uptime
+            const uptimeElement = document.getElementById('uptime');
+            const currentUptime = uptimeElement.textContent;
+            // Simple uptime increment simulation
+            uptimeElement.textContent = currentUptime;
+            
+            console.log('Status refreshed at', now);
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(refreshStatus, 30000);
+
+        // Update uptime every second
+        let startTime = Date.now() - (2 * 3600 + 34 * 60 + 12) * 1000; // 2h 34m 12s ago
+        setInterval(() => {
+            const uptime = Date.now() - startTime;
+            const hours = Math.floor(uptime / 3600000);
+            const minutes = Math.floor((uptime % 3600000) / 60000);
+            const seconds = Math.floor((uptime % 60000) / 1000);
+            document.getElementById('uptime').textContent = `${hours}h ${minutes}m ${seconds}s`;
+        }, 1000);
+    </script>
+</body>
+</html>
