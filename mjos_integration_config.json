@@ -1,0 +1,30 @@
+{
+  "mjos_version": "2.4.0-MJOS-Integrated",
+  "integration_timestamp": "2025-07-18T21:16:37.571533",
+  "python_mjos": {
+    "enabled": true,
+    "controller_path": "mjos_demo.py",
+    "features": [
+      "collaboration",
+      "memory",
+      "tasks",
+      "workflows"
+    ]
+  },
+  "typescript_mjos": {
+    "enabled": true,
+    "src_path": "src/",
+    "features": [
+      "core",
+      "agents",
+      "memory",
+      "reasoning"
+    ]
+  },
+  "integration_features": {
+    "cross_language_communication": true,
+    "unified_memory_system": true,
+    "hybrid_task_execution": true,
+    "web_dashboard": true
+  }
+}

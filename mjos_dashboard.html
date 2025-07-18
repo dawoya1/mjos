@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJOS智能协作系统 - 管理面板</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 40px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+        .header h1 { 
+            color: #333; 
+            font-size: 2.5em; 
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { color: #666; font-size: 1.2em; }
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 40px;
+        }
+        .stat-card { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card h3 { font-size: 1.8em; margin-bottom: 10px; }
+        .stat-card p { font-size: 1.1em; opacity: 0.9; }
+        .mjos-roles { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 40px;
+        }
+        .role-card { 
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .xiaozhi { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .xiaomei { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .xiaoma { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .role-card h3 { font-size: 1.5em; margin-bottom: 15px; }
+        .role-card p { font-size: 1.1em; line-height: 1.6; }
+        .integration-status { 
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .integration-status h3 { 
+            color: #333; 
+            margin-bottom: 20px; 
+            font-size: 1.5em;
+        }
+        .status-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .status-item:last-child { border-bottom: none; }
+        .status-badge { 
+            padding: 5px 15px; 
+            border-radius: 20px; 
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-active { background: #28a745; color: white; }
+        .status-inactive { background: #dc3545; color: white; }
+        .footer { 
+            text-align: center; 
+            color: #666; 
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .timestamp { 
+            background: #e9ecef;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 MJOS智能协作系统</h1>
+            <p>AI原生的三角协作智能决策平台</p>
+            <div class="timestamp">
+                版本: 2.4.0-MJOS-Demo | 运行时间: 0:00:03.939805
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>3</h3>
+                <p>🤝 协作决策次数</p>
+            </div>
+            <div class="stat-card">
+                <h3>3</h3>
+                <p>🧠 智能记忆数量</p>
+            </div>
+            <div class="stat-card">
+                <h3>2</h3>
+                <p>📋 任务总数</p>
+            </div>
+            <div class="stat-card">
+                <h3>2</h3>
+                <p>✅ 已完成任务</p>
+            </div>
+        </div>
+        
+        <div class="mjos-roles">
+            <div class="role-card xiaozhi">
+                <h3>🎯 莫小智</h3>
+                <p>战略思维专家，负责架构设计和长期规划。从全局视角分析问题，确保决策与战略目标一致，建立可扩展的技术基础。</p>
+            </div>
+            <div class="role-card xiaomei">
+                <h3>🎨 莫小美</h3>
+                <p>用户体验专家，专注界面优化和用户满意度。采用用户中心的设计方法，简化操作流程，提升使用效率。</p>
+            </div>
+            <div class="role-card xiaoma">
+                <h3>💻 莫小码</h3>
+                <p>技术实现专家，确保代码质量和系统性能。遵循最佳实践，采用现代化技术栈，保证系统稳定性和可维护性。</p>
+            </div>
+        </div>
+        
+        <div class="integration-status">
+            <h3>🔗 系统集成状态</h3>
+            <div class="status-item">
+                <span>TypeScript系统</span>
+                <span class="status-badge status-active">
+                    已集成
+                </span>
+            </div>
+            <div class="status-item">
+                <span>Node模块</span>
+                <span class="status-badge status-active">
+                    已安装
+                </span>
+            </div>
+            <div class="status-item">
+                <span>MCP服务器</span>
+                <span class="status-badge status-active">
+                    已配置
+                </span>
+            </div>
+            <div class="status-item">
+                <span>Web界面</span>
+                <span class="status-badge status-active">已创建</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🚀 MJOS - 让AI协作更智能，让开发更高效！</p>
+            <p>生成时间: 2025-07-18 20:44:40</p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card, .role-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // 定期刷新页面数据（实际应用中应该用AJAX）
+            setTimeout(() => {
+                console.log('MJOS Dashboard: 系统运行正常');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+        

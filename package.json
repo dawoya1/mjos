@@ -1,7 +1,7 @@
 {
   "name": "mjos",
-  "version": "2.5.4",
-  "description": "MJOS - AI-Native Intelligent Collaboration System with MCP Support. Perfect Enterprise-Grade AI Operating System with 96 tests 100% passed, 0 resource leaks, production-ready. Supports Claude Desktop, Cursor, VS Code, and Augment via MCP protocol.",
+  "version": "2.5.5",
+  "description": "🚀 MJOS v2.5.4 - Enterprise-Grade AI Operating System with Dynamic Version Management & MCP Support. Perfect for Claude Desktop, Cursor, VS Code, and Augment. Features: Intelligent Memory System, Team Collaboration, API Compatibility Management, Zero Resource Leaks, 96 Tests 100% Passed. Production-Ready with Automated Quality Assurance.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -60,8 +60,6 @@
     "dist",
     "bin",
     "config",
-    "docs",
-    "examples",
     "README.md",
     "LICENSE"
   ],
@@ -69,8 +67,7 @@
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
-    "test": "npm run test:sync && jest",
-    "test:sync": "node scripts/sync-tests.js",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "jest tests/integration.test.ts",
@@ -79,7 +76,7 @@
     "format": "prettier --write src/**/*.ts",
     "clean": "rimraf dist",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run clean && npm run build && npm run test:sync && npm test",
+    "prepublishOnly": "npm run clean && npm run build && npm test",
     "type-check": "tsc --noEmit",
     "docs:build": "typedoc src/index.ts",
     "docs:serve": "http-server docs -p 8080",

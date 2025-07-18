@@ -1,7 +1,9 @@
-# Source files (keep examples for users)
+# Source files and development content
 src/
 tests/
-# examples/ - keep for users
+examples/
+docs/
+scripts/
 
 # Development files
 *.ts
@@ -11,11 +13,9 @@ jest.config.js
 .eslintrc.js
 .prettierrc
 
-# Documentation source (keep docs for users)
-# docs/ - keep for users
+# Documentation and markdown files (except README)
 *.md
 !README.md
-!docs/**/*.md
 
 # Development tools
 .github/
@@ -23,10 +23,26 @@ jest.config.js
 coverage/
 node_modules/
 
-# Test files
+# Test files and development scripts
 test-*.js
+simple-test.js
 quality-report.js
 quality-report.json
+*.py
+__pycache__/
+*.cj
+knowledge.json
+release-info.json
+project-status.md
+setup-*.sh
+mjos-test/
+demo/
+storage/
+production_config/
+MCP_CONFIGURATION_GUIDE.md
+MJOS-Improvement-Plan.md
+MCode_Complete_Architecture_Document.md
+理论.md
 
 # Backup files
 *.backup/

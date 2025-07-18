@@ -1,0 +1,41 @@
+{
+  "name": "mjos",
+  "version": "2.4.1",
+  "description": "MJOS - AI-Native Intelligent Collaboration System with MCP Support. Perfect Enterprise-Grade AI Operating System with 96 tests 100% passed, 0 resource leaks, production-ready. Supports Claude Desktop, Cursor, VS Code, and Augment via MCP protocol.",
+  "timestamp": "2025-07-18T14:12:31.063Z",
+  "features": [
+    "MCP协议支持",
+    "Claude Desktop集成",
+    "Cursor集成",
+    "VS Code集成",
+    "Augment集成",
+    "npx一键安装",
+    "智能协作系统",
+    "记忆管理",
+    "任务管理",
+    "性能监控"
+  ],
+  "installation": {
+    "global": "npm install -g mjos",
+    "npx": "npx mjos mjos-mcp-server",
+    "local": "npm install mjos"
+  },
+  "mcpConfiguration": {
+    "claudeDesktop": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mjos@latest",
+        "mjos-mcp-server"
+      ]
+    },
+    "cursor": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mjos@latest",
+        "mjos-mcp-server"
+      ]
+    }
+  }
+}

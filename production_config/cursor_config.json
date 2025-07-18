@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mjos": {
+      "command": "npx",
+      "args": ["-y", "mjos@latest", "mjos-mcp-server"],
+      "env": {
+        "MJOS_LOG_LEVEL": "info",
+        "MJOS_MODE": "production"
+      }
+    }
+  }
+}

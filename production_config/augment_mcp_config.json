@@ -1,0 +1,11 @@
+{
+    "augment.advanced": {
+        "mcpServers": [
+            {"name": "mjos", "command": "npx", "args":
+             ["-y", "mjos@latest", "mjos-mcp-server"
+             ]
+            }
+         ]
+        
+        }
+    }
