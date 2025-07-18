@@ -1,6 +1,6 @@
 {
   "knowledge": {
-    "knowledge_1752862554422_dtmet9p5g": {
+    "knowledge_1752864089618_lkf5epurv": {
       "type": "fact",
       "content": "Test knowledge",
       "metadata": {
@@ -14,11 +14,11 @@
         "source": "test"
       },
       "relationships": [],
-      "id": "knowledge_1752862554422_dtmet9p5g",
-      "createdAt": "2025-07-18T18:15:54.422Z",
-      "updatedAt": "2025-07-18T18:15:54.422Z"
+      "id": "knowledge_1752864089618_lkf5epurv",
+      "createdAt": "2025-07-18T18:41:29.618Z",
+      "updatedAt": "2025-07-18T18:41:29.618Z"
     },
-    "knowledge_1752862554427_y9m46wrev": {
+    "knowledge_1752864089623_o5pm0rv49": {
       "type": "rule",
       "content": {
         "conclusion": {
@@ -46,14 +46,14 @@
         "version": 1
       },
       "relationships": [],
-      "id": "knowledge_1752862554427_y9m46wrev",
-      "createdAt": "2025-07-18T18:15:54.427Z",
-      "updatedAt": "2025-07-18T18:15:54.427Z"
+      "id": "knowledge_1752864089623_o5pm0rv49",
+      "createdAt": "2025-07-18T18:41:29.623Z",
+      "updatedAt": "2025-07-18T18:41:29.623Z"
     }
   },
   "metadata": {
     "version": "1.0.0",
-    "timestamp": "2025-07-18T18:15:54.428Z",
+    "timestamp": "2025-07-18T18:41:29.624Z",
     "count": 2
   }
 }

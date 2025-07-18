@@ -315,7 +315,7 @@ export class TeamCollaborationTest {
   private async testMCPTool(toolName: string, memberId: string): Promise<boolean> {
     try {
       switch (toolName) {
-        case 'moxiaoyi_generate_meeting_minutes':
+        case 'moxiaoyi_generate_meeting_minutes': {
           const minutes = await this.memoryManager.generateMeetingMinutes({
             title: '测试会议',
             participants: ['测试用户'],
@@ -324,13 +324,15 @@ export class TeamCollaborationTest {
             actionItems: []
           });
           return !!minutes.id;
+        }
 
-        case 'moxiaoyi_smart_search':
+        case 'moxiaoyi_smart_search': {
           const memories = await this.memoryManager.recallMemories({
             content: '测试',
             limit: 5
           });
           return Array.isArray(memories);
+        }
 
         default:
           return true;

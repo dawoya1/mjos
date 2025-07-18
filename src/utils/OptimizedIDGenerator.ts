@@ -288,7 +288,7 @@ export class OptimizedIDGenerator {
   private sanitizeProjectId(projectId: string): string {
     return projectId
       .toLowerCase()
-      .replace(/[^a-z0-9\-]/g, '-')
+      .replace(/[^a-z0-9-]/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '')
       .substring(0, 20); // 限制长度
@@ -310,7 +310,7 @@ export class OptimizedIDGenerator {
    * 验证项目ID格式
    */
   private isValidProjectId(projectId: string): boolean {
-    return /^[a-z0-9\-]{1,20}$/.test(projectId);
+    return /^[a-z0-9-]{1,20}$/.test(projectId);
   }
 
   /**
