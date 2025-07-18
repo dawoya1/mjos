@@ -5,7 +5,46 @@
 [![Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen.svg)]()
 [![Version](https://img.shields.io/badge/version-2.1.10-blue.svg)]()
 
-Enterprise-grade AI team collaboration operating system with memory management, knowledge graphs, team coordination, and MCP protocol integration.
+Enterprise-grade AI team collaboration operating system with memory management, knowledge graphs, team coordination, and **MCP protocol integration**.
+
+## 🚀 Quick Start with MCP
+
+MJOS now supports **Model Context Protocol (MCP)** and can be used directly in Claude Desktop, Cursor, VS Code, and Augment!
+
+### One-Line Installation
+```bash
+# Run MCP server directly
+npx mjos@latest mjos-mcp-server
+
+# Or install globally
+npm install -g mjos
+```
+
+### MCP Configuration for Claude Desktop
+```json
+{
+  "mcpServers": {
+    "mjos": {
+      "command": "npx",
+      "args": ["-y", "mjos@latest", "mjos-mcp-server"]
+    }
+  }
+}
+```
+
+### MCP Configuration for Cursor
+```json
+{
+  "mcpServers": {
+    "mjos": {
+      "command": "npx",
+      "args": ["-y", "mjos@latest", "mjos-mcp-server"]
+    }
+  }
+}
+```
+
+**📋 See [MCP Configuration Guide](MCP_CONFIGURATION_GUIDE.md) for complete setup instructions for all supported clients.**
 
 ## Features
 

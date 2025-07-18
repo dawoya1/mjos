@@ -20,7 +20,7 @@ export interface MemoryItem {
   timestamp: Date;
   lastAccessed: Date;
   accessCount: number;
-  tags: string[];
+  tags?: string[];
   importance: number; // 0-1
   type: MemoryType;
   metadata?: Record<string, any>;
@@ -300,7 +300,7 @@ export class MemorySystem extends EventEmitter {
       timestamp: new Date(),
       lastAccessed: new Date(),
       accessCount: 0,
-      tags,
+      tags: Array.isArray(tags) ? tags : [],
       importance: Math.max(0, Math.min(1, importance)),
       type,
       decay: 1.0
@@ -382,7 +382,8 @@ export class MemorySystem extends EventEmitter {
     // Filter by tags
     if (query.tags && query.tags.length > 0) {
       results = results.filter(item =>
-        query.tags!.some(tag => item.tags.includes(tag))
+        item.tags && Array.isArray(item.tags) &&
+        query.tags!.some(tag => item.tags!.includes(tag))
       );
     }
 
@@ -566,12 +567,14 @@ export class MemorySystem extends EventEmitter {
 
   private updateIndices(memory: MemoryItem): void {
     // Update tag index
-    memory.tags.forEach(tag => {
-      if (!this.tagIndex.has(tag)) {
-        this.tagIndex.set(tag, new Set());
-      }
-      this.tagIndex.get(tag)!.add(memory.id);
-    });
+    if (memory.tags && Array.isArray(memory.tags)) {
+      memory.tags.forEach(tag => {
+        if (!this.tagIndex.has(tag)) {
+          this.tagIndex.set(tag, new Set());
+        }
+        this.tagIndex.get(tag)!.add(memory.id);
+      });
+    }
 
     // Update type index
     if (!this.typeIndex.has(memory.type)) {
@@ -582,15 +585,17 @@ export class MemorySystem extends EventEmitter {
 
   private removeFromIndices(memory: MemoryItem): void {
     // Remove from tag index
-    memory.tags.forEach(tag => {
-      const taggedIds = this.tagIndex.get(tag);
-      if (taggedIds) {
-        taggedIds.delete(memory.id);
-        if (taggedIds.size === 0) {
-          this.tagIndex.delete(tag);
+    if (memory.tags && Array.isArray(memory.tags)) {
+      memory.tags.forEach(tag => {
+        const taggedIds = this.tagIndex.get(tag);
+        if (taggedIds) {
+          taggedIds.delete(memory.id);
+          if (taggedIds.size === 0) {
+            this.tagIndex.delete(tag);
+          }
         }
-      }
-    });
+      });
+    }
 
     // Remove from type index
     const typeIds = this.typeIndex.get(memory.type);
@@ -617,3 +622,11 @@ export class MemorySystem extends EventEmitter {
     this.logger.info('Memory system destroyed');
   }
 }
+
+// Export new intelligent memory manager
+export {
+  IntelligentMemoryManager,
+  MemoryType as IntelligentMemoryType,
+  ThinkingMethod,
+  type MemoryClassificationRule
+} from './IntelligentMemoryManager';

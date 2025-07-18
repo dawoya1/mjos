@@ -3,9 +3,8 @@
  * 魔剑工作室操作系统主入口 - 性能增强版本
  */
 import { MJOSEngine, ConfigManager } from './core/index';
-import { MemorySystem } from './memory/index';
+import { MemorySystem, ThinkingMethod } from './memory/index';
 import { TeamManager } from './team/index';
-import { PerformanceMonitor } from './performance/index';
 import { KnowledgeGraph } from './knowledge/index';
 import { ContextManager } from './context/index';
 import { ReasoningEngine } from './reasoning/index';
@@ -17,12 +16,18 @@ import { WorkflowEngine } from './workflow/index';
 import { APIServer } from './api/index';
 import { StorageManager } from './storage/index';
 import { SecurityManager } from './security/index';
-import { MonitoringSystem } from './monitoring/index';
+interface SimplePerformanceMetrics {
+    memoryUsage: {
+        used: number;
+        total: number;
+        percentage: number;
+    };
+    systemUptime: number;
+}
 export * from './types/index';
 export * from './core/index';
 export * from './memory/index';
 export * from './team/index';
-export * from './performance/index';
 export * from './knowledge/index';
 export { ContextManager as SessionContextManager } from './context/index';
 export * from './reasoning/index';
@@ -34,7 +39,6 @@ export { WorkflowEngine, WorkflowDefinition, WorkflowExecution } from './workflo
 export * from './api/index';
 export * from './storage/index';
 export * from './security/index';
-export * from './monitoring/index';
 export declare class MJOS {
     private version;
     private _running;
@@ -43,6 +47,7 @@ export declare class MJOS {
     private config;
     private coreContextManager;
     private memorySystem;
+    private intelligentMemoryManager;
     private teamManager;
     private performanceMonitor;
     private knowledgeGraph;
@@ -56,14 +61,13 @@ export declare class MJOS {
     private apiServer?;
     private storageManager;
     private securityManager;
-    private monitoringSystem;
     constructor();
     private setupModuleIntegration;
     getVersion(): string;
     get running(): boolean;
     start(): Promise<void>;
     stop(): Promise<void>;
-    cleanup(): void;
+    cleanup(): Promise<void>;
     getStatus(): {
         version: string;
         running: boolean;
@@ -79,7 +83,6 @@ export declare class MJOS {
     getContextManager(): ContextManager;
     getMemorySystem(): MemorySystem;
     getTeamManager(): TeamManager;
-    getPerformanceMonitor(): PerformanceMonitor;
     getKnowledgeGraph(): KnowledgeGraph;
     getReasoningEngine(): ReasoningEngine;
     getConfig(): ConfigManager;
@@ -91,8 +94,24 @@ export declare class MJOS {
     getAPIServer(): APIServer | undefined;
     getStorageManager(): StorageManager;
     getSecurityManager(): SecurityManager;
-    getMonitoringSystem(): MonitoringSystem;
-    remember(content: any, tags?: string[], importance?: number): string;
+    remember(content: any, options?: {
+        tags?: string[];
+        importance?: number;
+    }): string;
+    smartRemember(content: any, options?: {
+        tags?: string[];
+        importance?: number;
+    }): Promise<string>;
+    smartRecall(query: string, options?: {
+        includeWorkingMemory?: boolean;
+        maxResults?: number;
+        minImportance?: number;
+    }): Promise<import("./memory/index").MemoryItem[]>;
+    deepThink(problem: string, method?: ThinkingMethod): Promise<{
+        analysis: string;
+        solution: string;
+        relatedMemories: import("./memory/index").MemoryItem[];
+    }>;
     recall(query: any): any[];
     createTask(title: string, description: string, priority?: 'low' | 'medium' | 'high' | 'urgent'): string;
     assignTask(taskId: string, memberId: string): boolean;
@@ -110,18 +129,16 @@ export declare class MJOS {
     executeWorkflow(workflowId: string, variables?: Record<string, any>): Promise<string>;
     createAgent(definition: any): string;
     assignTaskToAgent(taskId: string, agentId?: string): string;
+    getPerformanceMetrics(): SimplePerformanceMetrics;
+    getPerformanceSummary(): {
+        status: string;
+        metrics: SimplePerformanceMetrics;
+    };
+    resetPerformanceMetrics(): void;
     createRole(definition: any): string;
     assignRoleToAgent(roleId: string, agentId: string): string;
     sendMessage(from: string, to: string, content: any, type?: any): Promise<string>;
     createCommunicationChannel(name: string, participants: string[], type?: any): string;
-    getPerformanceMetrics(): import("./performance/index").PerformanceMetrics;
-    getPerformanceSummary(): {
-        status: "healthy" | "warning" | "critical";
-        issues: string[];
-        metrics: import("./performance/index").PerformanceMetrics;
-    };
-    resetPerformanceMetrics(): void;
-    private wrapMethodsWithMonitoring;
 }
 export default MJOS;
 //# sourceMappingURL=index.d.ts.map

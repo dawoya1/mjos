@@ -83,7 +83,7 @@ class MJOSCli {
         });
         // MCP Server command
         this.program
-            .command('mcp-server')
+            .command('mjos-mcp-server')
             .description('启动MCP服务器')
             .action(async () => {
             await this.startMCPServer();
@@ -283,7 +283,7 @@ class MJOSCli {
                 results.forEach((memory, index) => {
                     console.log(chalk_1.default.green(`${index + 1}. [${memory.id}]`));
                     console.log(`   内容: ${JSON.stringify(memory.content)}`);
-                    console.log(`   标签: ${memory.tags.join(', ')}`);
+                    console.log(`   标签: ${memory.tags ? memory.tags.join(', ') : '无'}`);
                     console.log(`   重要性: ${memory.importance}`);
                     console.log(`   时间: ${memory.timestamp.toLocaleString()}`);
                     console.log('');
@@ -648,18 +648,22 @@ class MJOSCli {
                     tags: z.array(z.string()).optional().describe('标签'),
                     importance: z.number().min(0).max(1).optional().describe('重要性')
                 }
-            }, async ({ content, tags, importance }) => {
+            }, async ({ content, tags, importance, projectId, category }) => {
                 try {
-                    const memory = await this.mjos.memory.store({
-                        content,
-                        tags: tags || [],
-                        importance: importance || 0.5,
-                        timestamp: new Date()
+                    // 使用莫小忆的智能记忆管理
+                    const MoxiaoyiMemoryManager = require('../team/MoxiaoyiMemoryManager').default;
+                    const memoryManager = new MoxiaoyiMemoryManager(this.mjos);
+                    const memoryId = await memoryManager.storeMemory(content, {
+                        tags,
+                        importance,
+                        projectId,
+                        category: category,
+                        source: 'mcp-tool'
                     });
                     return {
                         content: [{
                                 type: 'text',
-                                text: `记忆已存储，ID: ${memory.id}`
+                                text: `✅ 莫小忆已智能存储记忆\n记忆ID: ${memoryId}\n已自动提取标签和评估重要性`
                             }]
                     };
                 }
@@ -667,7 +671,7 @@ class MJOSCli {
                     return {
                         content: [{
                                 type: 'text',
-                                text: `存储失败: ${error instanceof Error ? error.message : String(error)}`
+                                text: `❌ 存储失败: ${error instanceof Error ? error.message : String(error)}`
                             }],
                         isError: true
                     };
@@ -683,11 +687,14 @@ class MJOSCli {
                 }
             }, async ({ query, tags, limit }) => {
                 try {
-                    const memories = await this.mjos.memory.search({
-                        query: query || '',
-                        tags: tags || [],
-                        limit: limit || 10
-                    });
+                    const searchQuery = {};
+                    if (query)
+                        searchQuery.content = query;
+                    if (tags && tags.length > 0)
+                        searchQuery.tags = tags;
+                    if (limit)
+                        searchQuery.limit = limit;
+                    const memories = this.mjos.recall(searchQuery);
                     return {
                         content: [{
                                 type: 'text',
@@ -700,6 +707,91 @@ class MJOSCli {
                         content: [{
                                 type: 'text',
                                 text: `检索失败: ${error instanceof Error ? error.message : String(error)}`
+                            }],
+                        isError: true
+                    };
+                }
+            });
+            // 莫小忆专用MCP工具
+            mcpServer.registerTool('moxiaoyi_generate_meeting_minutes', {
+                title: '莫小忆生成会议纪要',
+                description: '莫小忆生成会议纪要',
+                inputSchema: {
+                    title: z.string().describe('会议标题'),
+                    participants: z.array(z.string()).describe('参会人员'),
+                    discussions: z.array(z.string()).describe('讨论内容'),
+                    decisions: z.array(z.string()).optional().describe('决策事项'),
+                    actionItems: z.array(z.object({
+                        task: z.string(),
+                        assignee: z.string(),
+                        deadline: z.string()
+                    })).optional().describe('行动项')
+                }
+            }, async ({ title, participants, discussions, decisions, actionItems }) => {
+                try {
+                    const MoxiaoyiMemoryManager = require('../team/MoxiaoyiMemoryManager').default;
+                    const memoryManager = new MoxiaoyiMemoryManager(this.mjos);
+                    const minutes = await memoryManager.generateMeetingMinutes({
+                        title,
+                        participants,
+                        discussions,
+                        decisions: decisions || [],
+                        actionItems: (actionItems || []).map((item) => ({
+                            ...item,
+                            deadline: new Date(item.deadline)
+                        }))
+                    });
+                    return {
+                        content: [{
+                                type: 'text',
+                                text: `✅ 莫小忆已生成会议纪要\n\n📋 会议: ${minutes.title}\n👥 参会: ${minutes.participants.join(', ')}\n📝 总结: ${minutes.summary}\n🎯 行动项: ${minutes.actionItems.length}个`
+                            }]
+                    };
+                }
+                catch (error) {
+                    return {
+                        content: [{
+                                type: 'text',
+                                text: `❌ 生成会议纪要失败: ${error instanceof Error ? error.message : String(error)}`
+                            }],
+                        isError: true
+                    };
+                }
+            });
+            mcpServer.registerTool('moxiaoyi_smart_search', {
+                title: '莫小忆智能记忆搜索',
+                description: '莫小忆智能记忆搜索',
+                inputSchema: {
+                    content: z.string().optional().describe('搜索内容'),
+                    tags: z.array(z.string()).optional().describe('标签过滤'),
+                    projectId: z.string().optional().describe('项目ID'),
+                    category: z.string().optional().describe('记忆分类'),
+                    limit: z.number().optional().describe('结果限制')
+                }
+            }, async ({ content, tags, projectId, category, limit }) => {
+                try {
+                    const MoxiaoyiMemoryManager = require('../team/MoxiaoyiMemoryManager').default;
+                    const memoryManager = new MoxiaoyiMemoryManager(this.mjos);
+                    const memories = await memoryManager.recallMemories({
+                        content,
+                        tags,
+                        projectId,
+                        category,
+                        limit: limit || 10
+                    });
+                    const results = memories.map((memory) => `📝 ${memory.category} | ⭐${memory.importance.toFixed(2)} | 🏷️${memory.tags.join(', ')}\n${memory.content.substring(0, 200)}...`).join('\n\n');
+                    return {
+                        content: [{
+                                type: 'text',
+                                text: `🧠 莫小忆智能搜索结果 (${memories.length}条):\n\n${results}`
+                            }]
+                    };
+                }
+                catch (error) {
+                    return {
+                        content: [{
+                                type: 'text',
+                                text: `❌ 智能搜索失败: ${error instanceof Error ? error.message : String(error)}`
                             }],
                         isError: true
                     };

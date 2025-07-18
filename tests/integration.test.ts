@@ -240,36 +240,30 @@ describe('MJOS Integration Tests', () => {
     });
   });
 
-  describe('Monitoring System', () => {
-    test('should record and retrieve metrics', () => {
-      const monitoringSystem = mjos.getMonitoringSystem();
-      
-      monitoringSystem.recordMetric('test.metric', 42, 'count');
-      
-      const metrics = monitoringSystem.getMetrics('test.metric');
-      expect(metrics.length).toBeGreaterThan(0);
-      expect(metrics[0]?.value).toBe(42);
+  describe('Basic System Health', () => {
+    test('should provide system status', () => {
+      const status = mjos.getStatus();
+      expect(status).toBeDefined();
+      expect(status.running).toBe(true);
+      expect(status.version).toBeDefined();
     });
 
-    test('should provide system health', () => {
-      const monitoringSystem = mjos.getMonitoringSystem();
-      
-      const health = monitoringSystem.getSystemHealth();
-      expect(health).toBeDefined();
-      expect(health.overall).toBeDefined();
-      expect(['healthy', 'warning', 'critical']).toContain(health.overall);
+    test('should provide performance metrics', () => {
+      const metrics = mjos.getPerformanceMetrics();
+      expect(metrics).toBeDefined();
+      expect(metrics.memoryUsage).toBeDefined();
+      expect(metrics.systemUptime).toBeDefined();
     });
   });
 
-  describe('Performance Monitoring', () => {
-    test('should provide performance metrics', () => {
-      const performanceMonitor = mjos.getPerformanceMonitor();
-      
-      const metrics = performanceMonitor.getMetrics();
-      expect(metrics).toBeDefined();
-      
-      const summary = performanceMonitor.getSummary();
+  describe('Performance Summary', () => {
+    test('should provide performance summary', () => {
+      const summary = mjos.getPerformanceSummary();
       expect(summary).toBeDefined();
+      expect(summary.status).toBeDefined();
+      expect(summary.metrics).toBeDefined();
+      expect(summary.metrics.memoryUsage).toBeDefined();
+      expect(summary.metrics.systemUptime).toBeDefined();
     });
   });
 
@@ -306,9 +300,9 @@ describe('MJOS Integration Tests', () => {
       );
       expect(memoryId).toBeDefined();
       
-      // Record metrics
-      const monitoringSystem = mjos.getMonitoringSystem();
-      monitoringSystem.recordMetric('integration.tasks', 1, 'count');
+      // Check performance metrics
+      const performanceMetrics = mjos.getPerformanceMetrics();
+      expect(performanceMetrics.memoryUsage).toBeDefined();
       
       // Verify everything is connected
       const status = mjos.getStatus();

@@ -238,7 +238,7 @@ class APIServer {
         // Performance endpoints
         this.app.get(`${prefix}/performance/metrics`, (req, res) => {
             try {
-                const metrics = this.mjos.getPerformanceMonitor().getMetrics();
+                const metrics = this.mjos.getPerformanceMetrics();
                 this.sendSuccess(res, metrics);
             }
             catch (error) {
@@ -247,7 +247,7 @@ class APIServer {
         });
         this.app.get(`${prefix}/performance/summary`, (req, res) => {
             try {
-                const summary = this.mjos.getPerformanceMonitor().getSummary();
+                const summary = this.mjos.getPerformanceSummary();
                 this.sendSuccess(res, summary);
             }
             catch (error) {

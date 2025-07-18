@@ -178,7 +178,7 @@ export class MJOSSDK {
   // Performance Operations
   async getPerformanceMetrics(): Promise<any> {
     if (this.mjos) {
-      return this.mjos.getPerformanceMonitor().getMetrics();
+      return this.mjos.getPerformanceMetrics();
     }
 
     return this.makeAPICall('GET', '/performance/metrics');
@@ -186,7 +186,7 @@ export class MJOSSDK {
 
   async getPerformanceSummary(): Promise<any> {
     if (this.mjos) {
-      return this.mjos.getPerformanceMonitor().getSummary();
+      return this.mjos.getPerformanceSummary();
     }
 
     return this.makeAPICall('GET', '/performance/summary');

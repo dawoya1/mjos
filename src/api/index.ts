@@ -277,7 +277,7 @@ export class APIServer {
     // Performance endpoints
     this.app.get(`${prefix}/performance/metrics`, (req: Request, res: Response) => {
       try {
-        const metrics = this.mjos.getPerformanceMonitor().getMetrics();
+        const metrics = this.mjos.getPerformanceMetrics();
         this.sendSuccess(res, metrics);
       } catch (error) {
         this.sendError(res, 'METRICS_ERROR', 'Failed to get performance metrics', 500, error);
@@ -286,7 +286,7 @@ export class APIServer {
 
     this.app.get(`${prefix}/performance/summary`, (req: Request, res: Response) => {
       try {
-        const summary = this.mjos.getPerformanceMonitor().getSummary();
+        const summary = this.mjos.getPerformanceSummary();
         this.sendSuccess(res, summary);
       } catch (error) {
         this.sendError(res, 'SUMMARY_ERROR', 'Failed to get performance summary', 500, error);

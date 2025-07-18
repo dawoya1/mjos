@@ -1,9 +1,13 @@
 {
   "name": "mjos",
-  "version": "2.1.12",
-  "description": "Magic Sword Studio Operating System - Perfect Enterprise-Grade AI Operating System with 96 tests 100% passed, 0 resource leaks, production-ready",
+  "version": "2.5.4",
+  "description": "MJOS - AI-Native Intelligent Collaboration System with MCP Support. Perfect Enterprise-Grade AI Operating System with 96 tests 100% passed, 0 resource leaks, production-ready. Supports Claude Desktop, Cursor, VS Code, and Augment via MCP protocol.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "mjos": "dist/cli/index.js",
+    "mjos-mcp-server": "bin/mjos-mcp-server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dawoya1/mjos.git"
@@ -14,6 +18,14 @@
   },
   "keywords": [
     "ai",
+    "mcp",
+    "model-context-protocol",
+    "claude-desktop",
+    "cursor",
+    "vscode",
+    "augment",
+    "intelligent-collaboration",
+    "ai-native",
     "enterprise-grade",
     "production-ready",
     "zero-resource-leaks",
@@ -23,7 +35,6 @@
     "magic-sword-studio",
     "prompt-framework",
     "artificial-intelligence",
-    "mcp",
     "multi-role",
     "workflow",
     "state-management",
@@ -35,7 +46,10 @@
     "performance-monitoring",
     "enterprise",
     "quality-assured",
-    "perfect-resource-management"
+    "perfect-resource-management",
+    "npx-installable",
+    "mcp-server",
+    "ai-collaboration"
   ],
   "author": "Magic Sword Studio",
   "license": "MIT",
@@ -55,7 +69,8 @@
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
-    "test": "jest",
+    "test": "npm run test:sync && jest",
+    "test:sync": "node scripts/sync-tests.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "jest tests/integration.test.ts",
@@ -64,7 +79,7 @@
     "format": "prettier --write src/**/*.ts",
     "clean": "rimraf dist",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run clean && npm run build && npm test",
+    "prepublishOnly": "npm run clean && npm run build && npm run test:sync && npm test",
     "type-check": "tsc --noEmit",
     "docs:build": "typedoc src/index.ts",
     "docs:serve": "http-server docs -p 8080",
@@ -86,10 +101,6 @@
     "fix:quick": "ts-node scripts/quick-fix.ts",
     "health:check": "ts-node scripts/health-check.ts"
   },
-  "bin": {
-    "mjos": "./dist/cli/index.js",
-    "mjos-mcp-server": "./bin/mjos-mcp-server.js"
-  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.1",
     "bcrypt": "^5.1.1",
@@ -103,6 +114,7 @@
     "inquirer": "^9.3.7",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "mjos": "^2.1.14",
     "node-cron": "^3.0.3",
     "ora": "^8.2.0",
     "rate-limiter-flexible": "^2.4.2",

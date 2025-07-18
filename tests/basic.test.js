@@ -4,6 +4,7 @@
  */
 
 const { MJOS } = require('../dist/index.js');
+const { getVersion } = require('../dist/utils/version.js');
 
 describe('MJOS Basic Tests', () => {
   let mjos;
@@ -23,7 +24,7 @@ describe('MJOS Basic Tests', () => {
   describe('Initialization', () => {
     test('should initialize correctly', () => {
       expect(mjos).toBeDefined();
-      expect(mjos.getVersion()).toBe('2.0.0');
+      expect(mjos.getVersion()).toBe(getVersion());
     });
 
     test('should have all subsystems', () => {
@@ -48,7 +49,7 @@ describe('MJOS Basic Tests', () => {
 
   describe('Memory System', () => {
     test('should remember and recall', () => {
-      const memoryId = mjos.remember('test content', ['test'], 0.8);
+      const memoryId = mjos.remember('test content', { tags: ['test'], importance: 0.8 });
       expect(memoryId).toBeDefined();
       
       const memories = mjos.recall({ tags: ['test'] });
@@ -100,7 +101,7 @@ describe('MJOS Basic Tests', () => {
     test('should provide comprehensive status', () => {
       const status = mjos.getStatus();
       
-      expect(status.version).toBe('2.0.0');
+      expect(status.version).toBe(getVersion());
       expect(status.engine).toBeDefined();
       expect(status.memory).toBeDefined();
       expect(status.team).toBeDefined();
@@ -116,7 +117,7 @@ describe('MJOS Basic Tests', () => {
 
       // Create a task and remember it
       const taskId = mjos.createTask('Integration Task', 'Test integration', 'medium');
-      mjos.remember(`Task created: ${taskId}`, ['task', 'integration'], 0.7);
+      mjos.remember(`Task created: ${taskId}`, { tags: ['task', 'integration'], importance: 0.7 });
 
       // Assign the task
       const assigned = mjos.assignTask(taskId, 'moxiaochuang');

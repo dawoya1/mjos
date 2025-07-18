@@ -336,12 +336,14 @@ export class KnowledgeGraph extends EventEmitter {
     this.typeIndex.get(item.type)!.add(item.id);
 
     // Update tag index
-    item.metadata.tags.forEach(tag => {
-      if (!this.tagIndex.has(tag)) {
-        this.tagIndex.set(tag, new Set());
-      }
-      this.tagIndex.get(tag)!.add(item.id);
-    });
+    if (item.metadata.tags && Array.isArray(item.metadata.tags)) {
+      item.metadata.tags.forEach(tag => {
+        if (!this.tagIndex.has(tag)) {
+          this.tagIndex.set(tag, new Set());
+        }
+        this.tagIndex.get(tag)!.add(item.id);
+      });
+    }
 
     // Update domain index
     if (!this.domainIndex.has(item.metadata.domain)) {
@@ -358,15 +360,17 @@ export class KnowledgeGraph extends EventEmitter {
     }
 
     // Remove from tag index
-    item.metadata.tags.forEach(tag => {
-      const tagIds = this.tagIndex.get(tag);
-      if (tagIds) {
-        tagIds.delete(item.id);
-        if (tagIds.size === 0) {
-          this.tagIndex.delete(tag);
+    if (item.metadata.tags && Array.isArray(item.metadata.tags)) {
+      item.metadata.tags.forEach(tag => {
+        const tagIds = this.tagIndex.get(tag);
+        if (tagIds) {
+          tagIds.delete(item.id);
+          if (tagIds.size === 0) {
+            this.tagIndex.delete(tag);
+          }
         }
-      }
-    });
+      });
+    }
 
     // Remove from domain index
     const domainIds = this.domainIndex.get(item.metadata.domain);

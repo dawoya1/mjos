@@ -4,6 +4,7 @@
  */
 
 import { MJOS } from '../index';
+import { getVersion } from '../utils/version';
 
 describe('MJOS Integration', () => {
   let mjos: MJOS;
@@ -22,7 +23,7 @@ describe('MJOS Integration', () => {
 
   describe('Initialization', () => {
     test('should initialize with correct version', () => {
-      expect(mjos.getVersion()).toBe('2.0.0');
+      expect(mjos.getVersion()).toBe(getVersion());
     });
 
     test('should initialize with all subsystems', () => {
@@ -67,7 +68,7 @@ describe('MJOS Integration', () => {
 
   describe('Memory System Integration', () => {
     test('should remember and recall information', () => {
-      const memoryId = mjos.remember('test content', ['test'], 0.8);
+      const memoryId = mjos.remember('test content', { tags: ['test'], importance: 0.8 });
       
       expect(memoryId).toBeDefined();
       
@@ -139,14 +140,14 @@ describe('MJOS Integration', () => {
   describe('Status Reporting', () => {
     test('should provide comprehensive status', async () => {
       // Add some data to systems
-      mjos.remember('test memory', ['test']);
+      mjos.remember('test memory', { tags: ['test'] });
       mjos.createTask('test task', 'description');
       
       await mjos.start();
       
       const status = mjos.getStatus();
 
-      expect(status.version).toBe('2.0.0');
+      expect(status.version).toBe(getVersion());
       expect(status.engine.running).toBe(true);
       expect(status.memory.totalMemories).toBeGreaterThan(0);
       expect(status.team.totalMembers).toBe(4);
@@ -156,8 +157,8 @@ describe('MJOS Integration', () => {
     test('should update status as systems change', () => {
       const initialStatus = mjos.getStatus();
       
-      mjos.remember('memory 1', ['tag1']);
-      mjos.remember('memory 2', ['tag2']);
+      mjos.remember('memory 1', { tags: ['tag1'] });
+      mjos.remember('memory 2', { tags: ['tag2'] });
       mjos.createTask('task 1', 'description 1');
       
       const updatedStatus = mjos.getStatus();
@@ -171,11 +172,11 @@ describe('MJOS Integration', () => {
     test('should coordinate between memory and team systems', () => {
       // Create a task and remember it
       const taskId = mjos.createTask('Important Task', 'Critical task description', 'urgent');
-      mjos.remember(`Task created: ${taskId}`, ['task', 'creation'], 0.9);
-      
+      mjos.remember(`Task created: ${taskId}`, { tags: ['task', 'creation'], importance: 0.9 });
+
       // Assign the task and remember the assignment
       mjos.assignTask(taskId, 'moxiaozhi');
-      mjos.remember(`Task ${taskId} assigned to 莫小智`, ['task', 'assignment'], 0.8);
+      mjos.remember(`Task ${taskId} assigned to 莫小智`, { tags: ['task', 'assignment'], importance: 0.8 });
       
       // Verify both systems have the information
       const taskMemories = mjos.recall({ tags: ['task'] });
@@ -200,7 +201,7 @@ describe('MJOS Integration', () => {
 
       // Perform operations that might use context
       mjos.createTask('Context Task', 'Task with context');
-      mjos.remember('Context memory', ['context']);
+      mjos.remember('Context memory', { tags: ['context'] });
 
       // Verify context is maintained
       expect(contextManager.get('current-user')).toBe('test-user');

@@ -4,7 +4,7 @@
  * 魔剑工作室操作系统记忆系统 - 多层次记忆架构
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MemorySystem = exports.MemoryType = void 0;
+exports.ThinkingMethod = exports.IntelligentMemoryType = exports.IntelligentMemoryManager = exports.MemorySystem = exports.MemoryType = void 0;
 const events_1 = require("events");
 const index_1 = require("../core/index");
 // Memory Types
@@ -212,7 +212,7 @@ class MemorySystem extends events_1.EventEmitter {
             timestamp: new Date(),
             lastAccessed: new Date(),
             accessCount: 0,
-            tags,
+            tags: Array.isArray(tags) ? tags : [],
             importance: Math.max(0, Math.min(1, importance)),
             type,
             decay: 1.0
@@ -274,7 +274,8 @@ class MemorySystem extends events_1.EventEmitter {
         }
         // Filter by tags
         if (query.tags && query.tags.length > 0) {
-            results = results.filter(item => query.tags.some(tag => item.tags.includes(tag)));
+            results = results.filter(item => item.tags && Array.isArray(item.tags) &&
+                query.tags.some(tag => item.tags.includes(tag)));
         }
         return results;
     }
@@ -416,12 +417,14 @@ class MemorySystem extends events_1.EventEmitter {
     }
     updateIndices(memory) {
         // Update tag index
-        memory.tags.forEach(tag => {
-            if (!this.tagIndex.has(tag)) {
-                this.tagIndex.set(tag, new Set());
-            }
-            this.tagIndex.get(tag).add(memory.id);
-        });
+        if (memory.tags && Array.isArray(memory.tags)) {
+            memory.tags.forEach(tag => {
+                if (!this.tagIndex.has(tag)) {
+                    this.tagIndex.set(tag, new Set());
+                }
+                this.tagIndex.get(tag).add(memory.id);
+            });
+        }
         // Update type index
         if (!this.typeIndex.has(memory.type)) {
             this.typeIndex.set(memory.type, new Set());
@@ -430,15 +433,17 @@ class MemorySystem extends events_1.EventEmitter {
     }
     removeFromIndices(memory) {
         // Remove from tag index
-        memory.tags.forEach(tag => {
-            const taggedIds = this.tagIndex.get(tag);
-            if (taggedIds) {
-                taggedIds.delete(memory.id);
-                if (taggedIds.size === 0) {
-                    this.tagIndex.delete(tag);
+        if (memory.tags && Array.isArray(memory.tags)) {
+            memory.tags.forEach(tag => {
+                const taggedIds = this.tagIndex.get(tag);
+                if (taggedIds) {
+                    taggedIds.delete(memory.id);
+                    if (taggedIds.size === 0) {
+                        this.tagIndex.delete(tag);
+                    }
                 }
-            }
-        });
+            });
+        }
         // Remove from type index
         const typeIds = this.typeIndex.get(memory.type);
         if (typeIds) {
@@ -462,4 +467,9 @@ class MemorySystem extends events_1.EventEmitter {
     }
 }
 exports.MemorySystem = MemorySystem;
+// Export new intelligent memory manager
+var IntelligentMemoryManager_1 = require("./IntelligentMemoryManager");
+Object.defineProperty(exports, "IntelligentMemoryManager", { enumerable: true, get: function () { return IntelligentMemoryManager_1.IntelligentMemoryManager; } });
+Object.defineProperty(exports, "IntelligentMemoryType", { enumerable: true, get: function () { return IntelligentMemoryManager_1.MemoryType; } });
+Object.defineProperty(exports, "ThinkingMethod", { enumerable: true, get: function () { return IntelligentMemoryManager_1.ThinkingMethod; } });
 //# sourceMappingURL=index.js.map

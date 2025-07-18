@@ -15,7 +15,7 @@ export interface MemoryItem {
     timestamp: Date;
     lastAccessed: Date;
     accessCount: number;
-    tags: string[];
+    tags?: string[];
     importance: number;
     type: MemoryType;
     metadata?: Record<string, any>;
@@ -83,4 +83,5 @@ export declare class MemorySystem extends EventEmitter {
     private generateId;
     destroy(): void;
 }
+export { IntelligentMemoryManager, MemoryType as IntelligentMemoryType, ThinkingMethod, type MemoryClassificationRule } from './IntelligentMemoryManager';
 //# sourceMappingURL=index.d.ts.map

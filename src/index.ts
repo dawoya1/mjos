@@ -4,9 +4,9 @@
  */
 
 import { MJOSEngine, Logger, ContextManager as CoreContextManager, ConfigManager } from './core/index';
-import { MemorySystem } from './memory/index';
+import { MemorySystem, IntelligentMemoryManager, IntelligentMemoryType, ThinkingMethod } from './memory/index';
+import { getVersion, getVersionInfo } from './utils/version';
 import { TeamManager } from './team/index';
-import { PerformanceMonitor } from './performance/index';
 import { KnowledgeGraph } from './knowledge/index';
 import { ContextManager } from './context/index';
 import { ReasoningEngine } from './reasoning/index';
@@ -18,14 +18,70 @@ import { WorkflowEngine } from './workflow/index';
 import { APIServer } from './api/index';
 import { StorageManager } from './storage/index';
 import { SecurityManager } from './security/index';
-import { MonitoringSystem } from './monitoring/index';
+
+// 简化的性能监控接口
+interface SimplePerformanceMetrics {
+  memoryUsage: {
+    used: number;
+    total: number;
+    percentage: number;
+  };
+  systemUptime: number;
+}
+
+// 简化的性能监控类
+class SimplePerformanceMonitor {
+  private startTime: number = Date.now();
+
+  getMetrics(): SimplePerformanceMetrics {
+    const memUsage = process.memoryUsage();
+    const totalMemory = require('os').totalmem();
+
+    return {
+      memoryUsage: {
+        used: memUsage.heapUsed,
+        total: totalMemory,
+        percentage: (memUsage.heapUsed / totalMemory) * 100
+      },
+      systemUptime: Date.now() - this.startTime
+    };
+  }
+
+  getSummary() {
+    const metrics = this.getMetrics();
+    return {
+      status: metrics.memoryUsage.percentage > 85 ? 'warning' : 'healthy',
+      metrics
+    };
+  }
+
+  reset() {
+    this.startTime = Date.now();
+  }
+
+  start() {
+    // 简化版：不做任何操作
+  }
+
+  stop() {
+    // 简化版：不做任何操作
+  }
+
+  destroy() {
+    // 简化版：不做任何操作
+  }
+
+  createTimer<T extends (...args: any[]) => any>(fn: T, category: string): T {
+    // 简化版：直接返回原函数，不做性能计时
+    return fn;
+  }
+}
 
 // 导出核心类型和模块
 export * from './types/index';
 export * from './core/index';
 export * from './memory/index';
 export * from './team/index';
-export * from './performance/index';
 export * from './knowledge/index';
 export { ContextManager as SessionContextManager } from './context/index';
 export * from './reasoning/index';
@@ -37,19 +93,19 @@ export { WorkflowEngine, WorkflowDefinition, WorkflowExecution } from './workflo
 export * from './api/index';
 export * from './storage/index';
 export * from './security/index';
-export * from './monitoring/index';
 
 // 主MJOS类
 export class MJOS {
-  private version = '2.0.0';
+  private version = getVersion();
   private _running = false;
   private engine: MJOSEngine;
   private logger: Logger;
   private config: ConfigManager;
   private coreContextManager: CoreContextManager;
   private memorySystem: MemorySystem;
+  private intelligentMemoryManager: IntelligentMemoryManager;
   private teamManager: TeamManager;
-  private performanceMonitor: PerformanceMonitor;
+  private performanceMonitor: SimplePerformanceMonitor;
   private knowledgeGraph: KnowledgeGraph;
   private contextManager: ContextManager;
   private reasoningEngine: ReasoningEngine;
@@ -61,7 +117,6 @@ export class MJOS {
   private apiServer?: APIServer;
   private storageManager: StorageManager;
   private securityManager: SecurityManager;
-  private monitoringSystem: MonitoringSystem;
   
   constructor() {
     // Initialize configuration first
@@ -70,7 +125,6 @@ export class MJOS {
         mjos: {
           version: '2.0.0',
           environment: 'development',
-          enablePerformanceMonitoring: true,
           enableKnowledgeGraph: true,
           enableReasoning: true
         }
@@ -99,10 +153,10 @@ export class MJOS {
       enableSemantic: this.config.get('mjos.enableSemanticSearch', false)
     });
 
-    this.performanceMonitor = new PerformanceMonitor({
-      enableAutoOptimization: this.config.get('mjos.enableAutoOptimization', false),
-      alertingEnabled: this.config.get('mjos.enableAlerting', true)
-    });
+    // Initialize intelligent memory manager with layered strategy
+    this.intelligentMemoryManager = new IntelligentMemoryManager();
+
+    this.performanceMonitor = new SimplePerformanceMonitor();
 
     this.knowledgeGraph = new KnowledgeGraph({
       maxNodes: this.config.get('mjos.maxKnowledgeNodes', 10000),
@@ -182,12 +236,7 @@ export class MJOS {
       maxLoginAttempts: this.config.get('mjos.maxLoginAttempts', 5)
     });
 
-    this.monitoringSystem = new MonitoringSystem({
-      enableRealTimeMetrics: this.config.get('mjos.enableRealTimeMetrics', true),
-      enableHealthChecks: this.config.get('mjos.enableHealthChecks', true),
-      enableAlerting: this.config.get('mjos.enableAlerting', true),
-      metricsRetention: this.config.get('mjos.metricsRetention', 3600000)
-    });
+
 
     // Register modules with engine
     this.engine.registerModule('memory', this.memorySystem);
@@ -200,18 +249,13 @@ export class MJOS {
     this.engine.registerModule('mcp', this.mcpManager);
     this.engine.registerModule('workflow', this.workflowEngine);
     this.engine.registerModule('team', this.teamManager);
-    this.engine.registerModule('performance', this.performanceMonitor);
     this.engine.registerModule('storage', this.storageManager);
     this.engine.registerModule('security', this.securityManager);
-    this.engine.registerModule('monitoring', this.monitoringSystem);
 
     // Setup inter-module communication
     this.setupModuleIntegration();
 
-    // Wrap methods with performance monitoring
-    this.wrapMethodsWithMonitoring();
-
-    this.logger.info('MJOS v2.0 initialized with enhanced AI capabilities!');
+    this.logger.info(getVersionInfo());
   }
   
   private setupModuleIntegration(): void {
@@ -267,10 +311,7 @@ export class MJOS {
       }
     });
 
-    // Performance monitoring integration
-    this.performanceMonitor.on('optimization-applied', (optimization) => {
-      this.logger.info(`Performance optimization applied: ${optimization.description}`);
-    });
+
   }
 
   getVersion(): string {
@@ -286,9 +327,6 @@ export class MJOS {
 
     // Connect storage
     await this.storageManager.connect();
-
-    // Start performance monitoring
-    this.performanceMonitor.start();
 
     await this.engine.start();
 
@@ -319,14 +357,10 @@ export class MJOS {
     }
 
     // Stop infrastructure modules
-    this.monitoringSystem.destroy();
     this.securityManager.destroy();
     await this.storageManager.disconnect();
 
     await this.engine.stop();
-
-    // Stop performance monitoring
-    this.performanceMonitor.stop();
 
     // Stop context manager
     this.contextManager.destroy();
@@ -344,7 +378,6 @@ export class MJOS {
     this.teamManager.destroy();
 
     // Remove all event listeners to prevent memory leaks
-    this.performanceMonitor.removeAllListeners();
 
     // Note: Memory system and knowledge graph are not destroyed here
     // to allow tests to access stored events. They will be cleaned up
@@ -355,20 +388,19 @@ export class MJOS {
   }
 
   // Cleanup method for complete resource cleanup (used in tests)
-  cleanup(): void {
+  async cleanup(): Promise<void> {
     if (this._running) {
       throw new Error('Cannot cleanup while MJOS is running. Call stop() first.');
     }
 
     // Destroy all modules with timers
     this.memorySystem.destroy();
+    await this.intelligentMemoryManager.destroy();
     this.knowledgeGraph.destroy();
     this.coreContextManager.destroy();
     this.contextManager.destroy();
-    this.performanceMonitor.destroy();
     this.mcpManager.destroy();
     this.storageManager.destroy();
-    this.monitoringSystem.destroy();
 
     this.logger.info('MJOS cleanup completed');
   }
@@ -414,9 +446,7 @@ export class MJOS {
     return this.teamManager;
   }
   
-  getPerformanceMonitor(): PerformanceMonitor {
-    return this.performanceMonitor;
-  }
+
 
   getKnowledgeGraph(): KnowledgeGraph {
     return this.knowledgeGraph;
@@ -462,13 +492,38 @@ export class MJOS {
     return this.securityManager;
   }
 
-  getMonitoringSystem(): MonitoringSystem {
-    return this.monitoringSystem;
-  }
+
   
   // Convenience methods with performance monitoring
-  remember(content: any, tags: string[] = [], importance: number = 0.5): string {
+  remember(content: any, options: { tags?: string[], importance?: number } = {}): string {
+    const tags = options.tags || [];
+    const importance = options.importance || 0.5;
+
+    // Use traditional memory system for synchronous operation
     return this.memorySystem.store(content, tags, importance);
+  }
+
+  // Async intelligent memory storage
+  async smartRemember(content: any, options: { tags?: string[], importance?: number } = {}): Promise<string> {
+    const tags = options.tags || [];
+    const importance = options.importance || 0.5;
+
+    // Use intelligent memory manager for automatic classification and storage
+    return await this.intelligentMemoryManager.smartStore(content, { tags, importance });
+  }
+
+  // Smart memory retrieval with automatic context awareness
+  async smartRecall(query: string, options?: {
+    includeWorkingMemory?: boolean;
+    maxResults?: number;
+    minImportance?: number;
+  }) {
+    return await this.intelligentMemoryManager.autoRetrieve(query, options);
+  }
+
+  // Deep thinking with integrated memory retrieval
+  async deepThink(problem: string, method?: ThinkingMethod) {
+    return await this.intelligentMemoryManager.deepThink(problem, method);
   }
   
   recall(query: any): any[] {
@@ -626,14 +681,21 @@ export class MJOS {
   assignTaskToAgent(taskId: string, agentId?: string): string {
     if (agentId) {
       return this.agentManager.assignTask(agentId, taskId);
-    } else {
-      // Find best agent automatically
-      const bestAgent = this.agentManager.findBestAgent(['execution'], 1);
-      if (bestAgent) {
-        return this.agentManager.assignTask(bestAgent.id, taskId);
-      }
-      throw new Error('No suitable agent found for task');
     }
+    return this.teamManager.assignTask(taskId, 'auto').toString();
+  }
+
+  // 简化的性能监控方法
+  getPerformanceMetrics() {
+    return this.performanceMonitor.getMetrics();
+  }
+
+  getPerformanceSummary() {
+    return this.performanceMonitor.getSummary();
+  }
+
+  resetPerformanceMetrics(): void {
+    this.performanceMonitor.reset();
   }
 
   // Enhanced role management
@@ -654,52 +716,8 @@ export class MJOS {
     return this.communicationManager.createChannel(name, type, participants);
   }
   
-  // Performance monitoring methods
-  getPerformanceMetrics() {
-    return this.performanceMonitor.getMetrics();
-  }
-  
-  getPerformanceSummary() {
-    return this.performanceMonitor.getSummary();
-  }
-  
-  resetPerformanceMetrics(): void {
-    this.performanceMonitor.reset();
-  }
-  
-  private wrapMethodsWithMonitoring(): void {
-    // Wrap memory system methods
-    const originalStore = this.memorySystem.store.bind(this.memorySystem);
-    const originalQuery = this.memorySystem.query.bind(this.memorySystem);
-    
-    this.memorySystem.store = this.performanceMonitor.createTimer(originalStore, 'memory');
-    this.memorySystem.query = this.performanceMonitor.createTimer(originalQuery, 'memory');
-    
-    // Wrap team manager methods
-    const originalCreateTask = this.teamManager.createTask.bind(this.teamManager);
-    const originalAssignTask = this.teamManager.assignTask.bind(this.teamManager);
-    
-    this.teamManager.createTask = this.performanceMonitor.createTimer(originalCreateTask, 'task');
-    this.teamManager.assignTask = this.performanceMonitor.createTimer(originalAssignTask, 'task');
-    
-    // Wrap context manager methods (using new ContextManager methods)
-    const originalCreateSession = this.contextManager.createSession.bind(this.contextManager);
-    const originalAddMessage = this.contextManager.addMessage.bind(this.contextManager);
 
-    this.contextManager.createSession = this.performanceMonitor.createTimer(originalCreateSession, 'context');
-    this.contextManager.addMessage = this.performanceMonitor.createTimer(originalAddMessage, 'context');
 
-    // Wrap knowledge operations
-    const originalKnowledgeAdd = this.knowledgeGraph.add.bind(this.knowledgeGraph);
-    const originalKnowledgeQuery = this.knowledgeGraph.query.bind(this.knowledgeGraph);
-
-    this.knowledgeGraph.add = this.performanceMonitor.createTimer(originalKnowledgeAdd, 'knowledge');
-    this.knowledgeGraph.query = this.performanceMonitor.createTimer(originalKnowledgeQuery, 'knowledge');
-
-    // Wrap reasoning operations
-    const originalReason = this.reasoningEngine.reason.bind(this.reasoningEngine);
-    this.reasoningEngine.reason = this.performanceMonitor.createTimer(originalReason, 'reasoning');
-  }
 }
 
 // 默认导出

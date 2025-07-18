@@ -182,10 +182,10 @@ class ProductionMJOSMCPServer {
       }
     });
 
-    // 性能指标工具
+    // 简化的性能指标工具
     this.tools.set('mjos_performance_metrics', {
       name: 'mjos_performance_metrics',
-      description: '获取性能指标',
+      description: '获取基本性能指标（内存使用、系统运行时间）',
       inputSchema: {
         type: 'object',
         properties: {}
@@ -197,6 +197,8 @@ class ProductionMJOSMCPServer {
         return this.mjos.getPerformanceMetrics();
       }
     });
+
+
   }
 
   async start() {
